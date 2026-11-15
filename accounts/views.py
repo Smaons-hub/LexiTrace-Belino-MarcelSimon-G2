@@ -1,9 +1,15 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db.models import Count, Q
 from django.shortcuts import redirect, render
+from django.utils import timezone
 
+from .decorators import role_required
 from .forms import LoginForm, RegisterForm
+from .models import User
 
 # Create your views here.
 
@@ -51,4 +57,31 @@ class UserLogoutView(LogoutView):
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+    if request.user.role == User.Role.ADMIN:
+        return redirect('accounts:admin_dashboard')
+    return redirect('accounts:learner_dashboard')
+
+
+@role_required(User.Role.LEARNER)
+def learner_dashboard(request):
+    return render(request, 'accounts/learner_dashboard.html')
+
+
+@role_required(User.Role.ADMIN)
+def admin_dashboard(request):
+    week_ago = timezone.now() - timedelta(days=7)
+    stats = User.objects.aggregate(
+        total=Count('pk'),
+        learners=Count('pk', filter=Q(role=User.Role.LEARNER)),
+        admins=Count('pk', filter=Q(role=User.Role.ADMIN)),
+        new_this_week=Count('pk', filter=Q(date_joined__gte=week_ago)),
+    )
+    recent_users = (
+        User.objects
+        .only('username', 'email', 'role', 'date_joined', 'is_active')
+        .order_by('-date_joined', '-pk')[:10]
+    )
+    return render(request, 'accounts/admin_dashboard.html', {
+        'stats': stats,
+        'recent_users': recent_users,
+    })

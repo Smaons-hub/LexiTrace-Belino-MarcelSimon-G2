@@ -252,6 +252,20 @@ a {
   --bs-alert-border-radius: var(--lt-radius);
 }
 
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--lt-text);
+  --bs-table-border-color: var(--lt-border);
+}
+
+.table thead th {
+  color: var(--lt-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .form-label {
   font-weight: 600;
 }
