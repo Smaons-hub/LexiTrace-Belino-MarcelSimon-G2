@@ -20,9 +20,13 @@
       {% if field.help_text %}
         <div id="{{ field.auto_id }}_helptext" class="form-text">{{ field.help_text|safe }}</div>
       {% endif %}
-      {% for error in field.errors %}
-        <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle-fill me-1" aria-hidden="true"></i>{{ error }}</div>
-      {% endfor %}
+      {% if field.errors %}
+        <div id="{{ field.auto_id }}_error">
+          {% for error in field.errors %}
+            <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle-fill me-1" aria-hidden="true"></i>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
   {% else %}
     <div class="mb-3">
@@ -37,9 +41,13 @@
       {% if field.help_text %}
         <div id="{{ field.auto_id }}_helptext" class="form-text">{{ field.help_text|safe }}</div>
       {% endif %}
-      {% for error in field.errors %}
-        <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle-fill me-1" aria-hidden="true"></i>{{ error }}</div>
-      {% endfor %}
+      {% if field.errors %}
+        <div id="{{ field.auto_id }}_error">
+          {% for error in field.errors %}
+            <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle-fill me-1" aria-hidden="true"></i>{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
   {% endif %}
 {% endfor %}
