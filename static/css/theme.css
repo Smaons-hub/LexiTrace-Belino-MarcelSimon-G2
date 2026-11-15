@@ -178,6 +178,36 @@ a {
   color: var(--lt-primary-text);
 }
 
+.avatar {
+  display: inline-block;
+  flex-shrink: 0;
+  width: var(--avatar-size, 40px);
+  height: var(--avatar-size, 40px);
+  border: 1px solid var(--lt-border);
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--lt-surface-alt);
+}
+
+.avatar-initials {
+  display: inline-grid;
+  place-items: center;
+  color: var(--lt-text);
+  font-size: calc(var(--avatar-size, 40px) * 0.4);
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+
+.profile-details dt {
+  color: var(--lt-muted);
+  font-weight: 600;
+}
+
+.profile-details dd {
+  margin-bottom: 0.75rem;
+}
+
 .theme-toggle {
   display: inline-grid;
   place-items: center;
