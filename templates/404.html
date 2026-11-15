@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found · LexiTrace{% endblock %}
+
+{% block content %}
+<section class="container">
+  <div class="error-page text-center">
+    <span class="error-icon mb-4" aria-hidden="true"><i class="bi bi-signpost-split"></i></span>
+    <p class="text-body-secondary fw-semibold mb-1">Error 404</p>
+    <h1 class="h2 fw-bold mb-3">We couldn&rsquo;t find that page</h1>
+    <p class="text-body-secondary mb-4">The link may be old or the address mistyped. Even our dictionary has no entry for this one.</p>
+    <a class="btn btn-primary" href="{% url 'accounts:home' %}"><i class="bi bi-house me-2" aria-hidden="true"></i>Back to home</a>
+  </div>
+</section>
+{% endblock %}

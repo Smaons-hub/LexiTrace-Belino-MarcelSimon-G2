@@ -1,0 +1,45 @@
+{% load ui %}
+{% if form.non_field_errors %}
+  <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+    <i class="bi bi-exclamation-octagon-fill flex-shrink-0" aria-hidden="true"></i>
+    <div>
+      {% for error in form.non_field_errors %}
+        <div>{{ error }}</div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+{% for field in form.visible_fields %}
+  {% if field.widget_type == 'checkbox' %}
+    <div class="form-check mb-3">
+      {{ field|add_class:"form-check-input" }}
+      <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {% if field.help_text %}
+        <div id="{{ field.auto_id }}_helptext" class="form-text">{{ field.help_text|safe }}</div>
+      {% endif %}
+      {% for error in field.errors %}
+        <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle-fill me-1" aria-hidden="true"></i>{{ error }}</div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="mb-3">
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {% if field.widget_type == 'select' or field.widget_type == 'selectmultiple' %}
+        {{ field|add_class:"form-select" }}
+      {% elif field.widget_type == 'radioselect' or field.widget_type == 'checkboxselectmultiple' %}
+        <div class="{% if field.errors %}is-invalid{% endif %}">{{ field }}</div>
+      {% else %}
+        {{ field|add_class:"form-control" }}
+      {% endif %}
+      {% if field.help_text %}
+        <div id="{{ field.auto_id }}_helptext" class="form-text">{{ field.help_text|safe }}</div>
+      {% endif %}
+      {% for error in field.errors %}
+        <div class="invalid-feedback d-block"><i class="bi bi-exclamation-circle-fill me-1" aria-hidden="true"></i>{{ error }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endfor %}

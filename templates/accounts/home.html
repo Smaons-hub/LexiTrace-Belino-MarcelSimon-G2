@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}LexiTrace · The right word, in context{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <h1 class="hero-title mb-3">The right word, <span class="brand-accent">in context.</span></h1>
+        <p class="hero-lead mb-4">LexiTrace reads the sentence around a word to give you the definition that actually fits, online, with an offline dictionary ready for when you are not.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary btn-lg" href="#"><i class="bi bi-person-plus me-2" aria-hidden="true"></i>Create account</a>
+          <a class="btn btn-outline-primary btn-lg" href="#">Log in</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card lookup-card">
+          <div class="card-body p-4">
+            <p class="text-body-secondary small text-uppercase fw-semibold mb-2">Example lookup</p>
+            <p class="fs-5 mb-3">&ldquo;The river <span class="lookup-word">bank</span> was covered in wildflowers.&rdquo;</p>
+            <hr>
+            <p class="mb-1"><strong>bank</strong> <span class="text-body-secondary fst-italic">noun</span></p>
+            <p class="mb-0">The sloping land along the edge of a river or lake.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pb-5" aria-labelledby="features-heading">
+  <div class="container">
+    <h2 id="features-heading" class="h4 fw-bold mb-4">What you will be able to do</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card feature-card">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="feature-icon" aria-hidden="true"><i class="bi bi-search"></i></span>
+              <span class="badge rounded-pill badge-soon">Coming soon</span>
+            </div>
+            <h3 class="h5 fw-bold">Contextual search</h3>
+            <p class="text-body-secondary mb-0">Look up a word inside the sentence you found it in.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="feature-icon" aria-hidden="true"><i class="bi bi-cloud-arrow-down"></i></span>
+              <span class="badge rounded-pill badge-soon">Coming soon</span>
+            </div>
+            <h3 class="h5 fw-bold">Offline lexicon</h3>
+            <p class="text-body-secondary mb-0">Keep a dictionary on your device for when the connection drops.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card feature-card">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="feature-icon" aria-hidden="true"><i class="bi bi-bookmark-heart"></i></span>
+              <span class="badge rounded-pill badge-soon">Coming soon</span>
+            </div>
+            <h3 class="h5 fw-bold">Personal vault</h3>
+            <p class="text-body-secondary mb-0">Save the words you want to remember and revisit them anytime.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
