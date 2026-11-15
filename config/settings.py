@@ -91,7 +91,6 @@ DATABASES = {
 }
 
 
-# Custom user model
 AUTH_USER_MODEL = 'accounts.User'
 
 
@@ -136,12 +135,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# User-uploaded files (profile photos)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-# Messages: map ERROR to Bootstrap's "danger" class
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
