@@ -43,11 +43,16 @@
         <ul class="navbar-nav ms-auto align-items-md-center gap-md-1 pt-3 pt-md-0">
           {% if user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'accounts:dashboard' %}"{% if request.resolver_match.url_name == 'dashboard' %} aria-current="page"{% endif %}><i class="bi bi-grid me-1" aria-hidden="true"></i>Dashboard</a>
+              <a class="nav-link" href="{% url 'accounts:dashboard' %}"{% if request.resolver_match.url_name == 'learner_dashboard' or request.resolver_match.url_name == 'admin_dashboard' %} aria-current="page"{% endif %}><i class="bi bi-grid me-1" aria-hidden="true"></i>Dashboard</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#"><i class="bi bi-person-circle me-1" aria-hidden="true"></i>Profile</a>
             </li>
+            {% if user.role == 'admin' and user.is_staff %}
+              <li class="nav-item">
+                <a id="nav-manage-users" class="nav-link" href="{% url 'admin:accounts_user_changelist' %}"><i class="bi bi-people me-1" aria-hidden="true"></i>Manage users</a>
+              </li>
+            {% endif %}
             <li class="nav-item">
               <span class="navbar-text text-body d-inline-flex align-items-center gap-2 px-md-2">
                 <span class="fw-semibold">{{ user.display_name }}</span>
