@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Edit profile · LexiTrace{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+      <div class="card">
+        <div class="card-body p-4 p-sm-5">
+          <div class="d-flex align-items-center gap-4 mb-4">
+            {% include "partials/avatar.html" with person=user size=80 %}
+            <div>
+              <h1 class="h3 fw-bold mb-1">Edit profile</h1>
+              <p class="text-body-secondary mb-0">{% if user.profile_photo %}This is your current photo.{% else %}You have no photo yet, so your initials are shown.{% endif %}</p>
+            </div>
+          </div>
+
+          <dl class="row profile-details mb-2" id="readonly-details">
+            <dt class="col-sm-4">Username</dt>
+            <dd class="col-sm-8">{{ user.username }}</dd>
+            <dt class="col-sm-4">Role</dt>
+            <dd class="col-sm-8"><span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle">{{ user.get_role_display }}</span></dd>
+          </dl>
+          <p class="form-text mt-0 mb-4">Your username and role can&rsquo;t be changed here.</p>
+
+          <form method="post" enctype="multipart/form-data" action="{% url 'accounts:profile_edit' %}" novalidate>
+            {% csrf_token %}
+            {% include "partials/form_fields.html" with form=form %}
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+              <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-2" aria-hidden="true"></i>Save changes</button>
+              <a class="btn btn-outline-primary" href="{% url 'accounts:profile' %}">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

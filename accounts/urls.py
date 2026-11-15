@@ -7,6 +7,8 @@ from .views import (
     dashboard,
     home,
     learner_dashboard,
+    profile,
+    profile_edit,
     register,
 )
 
@@ -20,4 +22,6 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('dashboard/learner/', learner_dashboard, name='learner_dashboard'),
     path('dashboard/admin/', admin_dashboard, name='admin_dashboard'),
+    path('profile/', profile, name='profile'),
+    path('profile/edit/', profile_edit, name='profile_edit'),
 ]

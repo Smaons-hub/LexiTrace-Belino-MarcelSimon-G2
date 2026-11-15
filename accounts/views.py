@@ -8,7 +8,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 
 from .decorators import role_required
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, ProfileForm, RegisterForm
 from .models import User
 
 # Create your views here.
@@ -85,3 +85,23 @@ def admin_dashboard(request):
         'stats': stats,
         'recent_users': recent_users,
     })
+
+
+@login_required
+def profile(request):
+    return render(request, 'accounts/profile.html')
+
+
+@login_required
+def profile_edit(request):
+    account = User.objects.get(pk=request.user.pk)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=account)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('accounts:profile')
+        messages.error(request, 'Could not update your profile. Please correct the errors below.')
+    else:
+        form = ProfileForm(instance=account)
+    return render(request, 'accounts/profile_edit.html', {'form': form})
