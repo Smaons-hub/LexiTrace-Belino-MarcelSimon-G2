@@ -1,6 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.views.decorators.debug import sensitive_variables
 
+from .backends import UsernameOrEmailBackend
 from .models import User
 
 
@@ -45,3 +48,47 @@ class RegisterForm(UserCreationForm):
             user.save()
             self.save_m2m()
         return user
+
+
+class LoginForm(AuthenticationForm):
+    error_messages = {
+        'invalid_login': 'Invalid username/email or password. Please try again.',
+        'inactive': 'This account is inactive.',
+    }
+
+    def __init__(self, request=None, *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        username = self.fields['username']
+        username.label = 'Username or email'
+        username.max_length = 254
+        username.widget.attrs.update({
+            'autofocus': True,
+            'autocomplete': 'username',
+            'maxlength': 254,
+            'placeholder': 'juandc or you@example.com',
+        })
+        self.fields['password'].widget.attrs.update({
+            'autocomplete': 'current-password',
+            'placeholder': 'Your password',
+        })
+
+    @sensitive_variables()
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        if username is not None and password:
+            self.user_cache = authenticate(self.request, username=username, password=password)
+            if self.user_cache is None:
+                if self.is_inactive_account(username, password):
+                    raise forms.ValidationError(self.error_messages['inactive'], code='inactive')
+                raise self.get_invalid_login_error()
+            self.confirm_login_allowed(self.user_cache)
+        return self.cleaned_data
+
+    @sensitive_variables('password')
+    def is_inactive_account(self, username, password):
+        user = UsernameOrEmailBackend.find_user(username)
+        if user is None:
+            User().set_password(password)
+            return False
+        return user.check_password(password) and not user.is_active
