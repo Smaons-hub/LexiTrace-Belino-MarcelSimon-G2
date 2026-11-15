@@ -21,3 +21,6 @@ db.sqlite3
 
 # Logs
 *.log
+
+# Local assistant instructions
+CLAUDE.md
