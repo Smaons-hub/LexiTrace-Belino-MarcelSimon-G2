@@ -14,7 +14,8 @@
   --lt-primary-hover: #A81F1F;
   --lt-primary-hover-rgb: 168, 31, 31;
   --lt-primary-soft: #F9E4DB;
-  --lt-primary-text: #C62828;
+  --lt-primary-text: #B52121;
+  --lt-primary-text-rgb: 181, 33, 33;
   --lt-on-primary: #FFFFFF;
   --lt-success-text: #2F5D3A;
   --lt-success-soft: #E3EBD9;
@@ -31,6 +32,7 @@
   --lt-glow-shadow: 0 0 0.9rem 0.1rem var(--lt-glow);
   --lt-grain: rgba(43, 33, 24, 0.05);
   --lt-lamp: rgba(255, 252, 243, 0.8);
+  --lt-wallpaper: rgba(92, 61, 36, 0.1);
   --lt-spine-1: #7B3F49;
   --lt-spine-2: #B5904F;
   --lt-spine-3: #55705A;
@@ -59,6 +61,7 @@
   --lt-primary-hover-rgb: 240, 122, 114;
   --lt-primary-soft: #3B241D;
   --lt-primary-text: #F07A72;
+  --lt-primary-text-rgb: 240, 122, 114;
   --lt-on-primary: #1B1411;
   --lt-success-text: #A9CFA8;
   --lt-success-soft: #1F2B20;
@@ -75,6 +78,7 @@
   --lt-glow-shadow: 0 0 0.9rem 0.1rem var(--lt-glow);
   --lt-grain: rgba(241, 230, 214, 0.035);
   --lt-lamp: rgba(224, 150, 70, 0.12);
+  --lt-wallpaper: rgba(241, 230, 214, 0.08);
   --lt-spine-1: #5C2E37;
   --lt-spine-2: #8A6C3A;
   --lt-spine-3: #3E5745;
@@ -127,7 +131,7 @@
   --bs-warning-bg-subtle: var(--lt-warning-soft);
   --bs-warning-border-subtle: var(--lt-warning-border);
   --bs-link-color: var(--lt-primary-text);
-  --bs-link-color-rgb: var(--lt-primary-rgb);
+  --bs-link-color-rgb: var(--lt-primary-text-rgb);
   --bs-link-hover-color: var(--lt-primary-hover);
   --bs-link-hover-color-rgb: var(--lt-primary-hover-rgb);
   --bs-focus-ring-color: var(--lt-focus-ring);
@@ -136,7 +140,6 @@
 }
 
 [data-bs-theme="dark"] {
-  --bs-link-color-rgb: var(--lt-primary-hover-rgb);
   --bs-link-hover-color: var(--lt-text);
   --bs-link-hover-color-rgb: var(--lt-text-rgb);
   --bs-primary-text-emphasis: var(--lt-primary-text);
@@ -157,6 +160,21 @@ body {
   background-repeat: no-repeat, repeat, repeat;
   color: var(--lt-text);
   line-height: 1.6;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--lt-wallpaper);
+  -webkit-mask-image: url("../img/library-pattern.svg");
+  mask-image: url("../img/library-pattern.svg");
+  -webkit-mask-size: 220px 220px;
+  mask-size: 220px 220px;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
 }
 
 main {
@@ -522,7 +540,11 @@ h4,
 .form-select:focus {
   background-color: var(--lt-surface);
   border-color: var(--lt-primary);
-  box-shadow: 0 0 0 0.25rem var(--lt-focus-ring);
+  box-shadow: 0 0 0 0.2rem var(--lt-focus-ring), var(--lt-glow-shadow);
+}
+
+textarea.form-control {
+  min-height: 5rem;
 }
 
 .form-check-input {
@@ -531,7 +553,7 @@ h4,
 
 .form-check-input:focus {
   border-color: var(--lt-primary);
-  box-shadow: 0 0 0 0.25rem var(--lt-focus-ring);
+  box-shadow: 0 0 0 0.2rem var(--lt-focus-ring), var(--lt-glow-shadow);
 }
 
 .form-check-input:checked {
@@ -642,6 +664,18 @@ h4,
   outline-offset: 2px;
 }
 
+.empty-state-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px solid var(--lt-border);
+  border-radius: 50%;
+  background-color: var(--lt-surface-alt);
+  color: var(--lt-muted);
+  font-size: 1.5rem;
+}
+
 .badge-soon {
   background-color: var(--lt-surface-alt);
   color: var(--lt-muted);
@@ -732,6 +766,17 @@ h4,
   overflow-wrap: anywhere;
 }
 
+.vault-card {
+  border-left: 4px solid var(--lt-primary);
+}
+
+.vault-card-title {
+  font-family: var(--lt-font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
 .vault-card-link {
   color: var(--lt-text);
   text-decoration: none;
@@ -753,6 +798,48 @@ h4,
 
 .vault-favorite {
   color: var(--lt-primary-text);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.vault-entry-title {
+  font-family: var(--lt-font-serif);
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.vault-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.vault-favorite-btn {
+  --bs-btn-color: var(--lt-text);
+  --bs-btn-border-color: var(--lt-input-border);
+  --bs-btn-hover-color: var(--lt-primary-text);
+  --bs-btn-hover-bg: var(--lt-primary-soft);
+  --bs-btn-hover-border-color: var(--lt-primary);
+  --bs-btn-active-color: var(--lt-primary-text);
+  --bs-btn-active-bg: var(--lt-primary-soft);
+  --bs-btn-active-border-color: var(--lt-primary);
+}
+
+.vault-delete-btn {
+  --bs-btn-color: var(--lt-muted);
+  --bs-btn-border-color: var(--lt-input-border);
+  --bs-btn-hover-color: var(--lt-on-primary);
+  --bs-btn-hover-bg: var(--lt-primary);
+  --bs-btn-hover-border-color: var(--lt-primary);
+  --bs-btn-active-color: var(--lt-on-primary);
+  --bs-btn-active-bg: var(--lt-primary-hover);
+  --bs-btn-active-border-color: var(--lt-primary-hover);
+}
+
+.vault-prose {
+  max-width: 65ch;
+  line-height: 1.7;
 }
 
 .vault-meta {
@@ -772,8 +859,36 @@ h4,
 
 .vault-example {
   border-left: 3px solid var(--lt-primary);
-  padding-left: 0.85rem;
+  padding-left: 1rem;
+  font-family: var(--lt-font-serif);
+  font-size: 1.05rem;
   font-style: italic;
+}
+
+.vault-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--lt-border);
+  border-radius: var(--lt-radius);
+  background-color: var(--lt-surface-alt);
+}
+
+.vault-note-icon {
+  flex-shrink: 0;
+  color: var(--lt-primary-text);
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.vault-note-body {
+  min-width: 0;
+}
+
+.vault-times dd {
+  color: var(--lt-muted);
+  font-size: 0.9rem;
 }
 
 .vault-empty-text {
@@ -813,7 +928,16 @@ h4,
   --bs-pagination-disabled-bg: var(--lt-surface-alt);
   --bs-pagination-disabled-border-color: var(--lt-border);
   --bs-pagination-border-radius: var(--lt-radius);
-  row-gap: 0.5rem;
+  --bs-pagination-padding-x: 0.95rem;
+  gap: 0.4rem;
+}
+
+.pagination .page-item .page-link {
+  min-width: 2.5rem;
+  margin-left: 0;
+  border-radius: var(--lt-radius);
+  font-weight: 600;
+  text-align: center;
 }
 
 .error-page {
@@ -844,6 +968,7 @@ h4,
   --lt-shelf-board-height: 0.45rem;
   flex-shrink: 0;
   height: var(--lt-shelf-height);
+  background-color: var(--lt-bg);
   background-image:
     linear-gradient(var(--lt-shelf-board), var(--lt-shelf-board)),
     repeating-linear-gradient(90deg, var(--lt-spine-1) 0 0.92rem, transparent 0.92rem 1.7rem, var(--lt-spine-4) 1.7rem 2.92rem, transparent 2.92rem 5.4rem, var(--lt-spine-3) 5.4rem 6.82rem, transparent 6.82rem 6.9rem, var(--lt-spine-2) 6.9rem 7.52rem, transparent 7.52rem 10.6rem, var(--lt-spine-3) 10.6rem 11.32rem, transparent 11.32rem 12.6rem, var(--lt-spine-4) 12.6rem 13.32rem, transparent 13.32rem 13.4rem, var(--lt-spine-5) 13.4rem 14.52rem, transparent 14.52rem 16.5rem, var(--lt-spine-1) 16.5rem 17.12rem, transparent 17.12rem 20rem),
@@ -862,7 +987,8 @@ h4,
 }
 
 @media print {
-  .lt-shelf {
+  .lt-shelf,
+  body::before {
     display: none;
   }
 }

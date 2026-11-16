@@ -51,7 +51,7 @@
   {% else %}
     <div class="card" id="vault-empty">
       <div class="card-body p-5 text-center">
-        <span class="feature-icon mb-3" aria-hidden="true"><i class="bi bi-bookmark-heart"></i></span>
+        <span class="empty-state-icon mb-3" aria-hidden="true"><i class="bi bi-book"></i></span>
         <h2 class="h4 fw-bold">Your vault is empty</h2>
         <p class="text-body-secondary mx-auto vault-empty-text">Save a word with its meaning, an example and your own memory trick, and it will wait here for you.</p>
         <a class="btn btn-primary" href="{% url 'vault:create' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add your first word</a>
