@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form.instance.pk %}Edit word{% else %}Add a word{% endif %} · LexiTrace{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+      <a class="d-inline-block mb-3" href="{% if form.instance.pk %}{% url 'vault:detail' form.instance.pk %}{% else %}{% url 'vault:list' %}{% endif %}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>{% if form.instance.pk %}Back to the word{% else %}Back to my vault{% endif %}</a>
+      <div class="card">
+        <div class="card-body p-4 p-sm-5">
+          <h1 class="h3 fw-bold mb-1">{% if form.instance.pk %}Edit word{% else %}Add a word{% endif %}</h1>
+          <p class="text-body-secondary mb-4">Fields marked optional can be left empty.</p>
+          <form method="post" novalidate id="vault-entry-form">
+            {% csrf_token %}
+            {% include "partials/form_fields.html" %}
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
+              <button type="submit" class="btn btn-primary"><i class="bi bi-bookmark-plus me-1" aria-hidden="true"></i>{% if form.instance.pk %}Save changes{% else %}Save to vault{% endif %}</button>
+              <a class="btn btn-outline-primary" href="{% if form.instance.pk %}{% url 'vault:detail' form.instance.pk %}{% else %}{% url 'vault:list' %}{% endif %}">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
