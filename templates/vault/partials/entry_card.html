@@ -4,9 +4,13 @@
       <h2 class="vault-card-title vault-word mb-0">
         <a class="stretched-link vault-card-link" href="{% url 'vault:detail' entry.pk %}">{{ entry.word }}</a>
       </h2>
-      {% if entry.is_favorite %}
-        <span class="vault-favorite flex-shrink-0"><i class="bi bi-bookmark-star-fill" aria-hidden="true"></i><span class="visually-hidden">Favorite</span></span>
-      {% endif %}
+      <form method="post" action="{% url 'vault:toggle_favorite' entry.pk %}" class="flex-shrink-0">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        <button type="submit" class="vault-favorite-toggle{% if entry.is_favorite %} is-favorite{% endif %}" aria-label="{% if entry.is_favorite %}Remove {{ entry.word }} from favorites{% else %}Add {{ entry.word }} to favorites{% endif %}" title="{% if entry.is_favorite %}Remove from favorites{% else %}Add to favorites{% endif %}">
+          <i class="bi {% if entry.is_favorite %}bi-bookmark-star-fill{% else %}bi-bookmark-star{% endif %}" aria-hidden="true"></i>
+        </button>
+      </form>
     </div>
     <p class="mb-2 vault-text">{{ entry.meaning|truncatechars:160 }}</p>
     {% with tags=entry.tags.all %}

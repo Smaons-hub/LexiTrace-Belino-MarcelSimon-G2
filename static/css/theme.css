@@ -402,6 +402,29 @@ h4,
   user-select: none;
 }
 
+.avatar-size-28 {
+  --avatar-size: 28px;
+}
+
+.avatar-size-80 {
+  --avatar-size: 80px;
+}
+
+.avatar-size-96 {
+  --avatar-size: 96px;
+}
+
+.profile-heading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.profile-section {
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--lt-border);
+}
+
 .profile-details dt {
   color: var(--lt-muted);
   font-weight: 600;
@@ -646,41 +669,6 @@ textarea.form-control {
   font-size: 1.35rem;
 }
 
-.tool-card-link {
-  color: var(--lt-text);
-  text-decoration: none;
-}
-
-.tool-card-link:focus-visible {
-  outline: none;
-}
-
-.tool-card-arrow {
-  color: var(--lt-muted);
-  font-size: 1.25rem;
-}
-
-.tool-card:hover,
-.tool-card:focus-within {
-  border-color: var(--lt-primary);
-}
-
-.tool-card:hover .tool-card-link,
-.tool-card:focus-within .tool-card-link {
-  color: var(--lt-primary-text);
-  text-decoration: underline;
-}
-
-.tool-card:hover .tool-card-arrow,
-.tool-card:focus-within .tool-card-arrow {
-  color: var(--lt-primary-text);
-}
-
-.tool-card:focus-within {
-  outline: 3px solid var(--lt-primary);
-  outline-offset: 2px;
-}
-
 .empty-state-icon {
   display: inline-grid;
   place-items: center;
@@ -772,8 +760,128 @@ textarea.form-control {
 
 .daily-review-word {
   color: var(--lt-primary-text);
+  font-family: var(--lt-font-serif);
   font-size: 1.25rem;
   font-weight: 700;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.stat-tile {
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--lt-border);
+  border-radius: var(--lt-radius);
+  background-color: var(--lt-surface-alt);
+}
+
+.stat-tile dt {
+  color: var(--lt-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stat-tile dd {
+  margin-bottom: 0;
+  font-family: var(--lt-font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.recent-word {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--lt-border);
+}
+
+.recent-word:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.recent-word-link {
+  font-family: var(--lt-font-serif);
+  font-weight: 600;
+}
+
+.admin-search {
+  width: 100%;
+  max-width: 26rem;
+}
+
+.admin-entry-word {
+  font-family: var(--lt-font-serif);
+}
+
+@media (max-width: 575.98px) {
+  .table-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .table-stack tbody,
+  .table-stack tr {
+    display: block;
+  }
+
+  .table-stack tr {
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--lt-border);
+  }
+
+  .table-stack tr:first-child {
+    padding-top: 0;
+  }
+
+  .table-stack tr:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .table-stack th[scope="row"],
+  .table-stack td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.2rem 0;
+    border: 0;
+    text-align: end;
+    white-space: normal;
+  }
+
+  .table-stack [data-label]::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--lt-muted);
+    font-family: var(--bs-body-font-family);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: start;
+  }
+
+  .table-stack .tag-list {
+    justify-content: flex-end;
+  }
+
+  .table-stack .table-stack-actions {
+    justify-content: flex-start;
+    padding-top: 0.5rem;
+  }
 }
 
 .vault-word,
@@ -813,10 +921,61 @@ textarea.form-control {
   color: var(--lt-primary-text);
 }
 
-.vault-favorite {
-  color: var(--lt-primary-text);
-  font-size: 1.25rem;
+.vault-favorite-toggle {
+  position: relative;
+  z-index: 2;
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 1px solid var(--lt-border);
+  border-radius: 50%;
+  background-color: var(--lt-surface);
+  color: var(--lt-muted);
+  font-size: 1.1rem;
   line-height: 1;
+}
+
+.vault-favorite-toggle.is-favorite {
+  border-color: var(--lt-primary);
+  color: var(--lt-primary-text);
+}
+
+.vault-favorite-toggle:hover,
+.vault-favorite-toggle:focus-visible {
+  border-color: var(--lt-primary);
+  background-color: var(--lt-primary-soft);
+  color: var(--lt-primary-text);
+}
+
+.vault-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.vault-toolbar-search {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.vault-toolbar-sort {
+  flex: 1 1 10rem;
+  max-width: 14rem;
+}
+
+.vault-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.vault-clear-link {
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .vault-entry-title {
@@ -1035,9 +1194,8 @@ a.tag-chip[aria-current="true"] .tag-chip-count {
 }
 
 .error-page {
-  padding-block: clamp(3rem, 10vw, 7rem);
   max-width: 32rem;
-  margin-inline: auto;
+  margin: clamp(2rem, 8vw, 5rem) auto;
 }
 
 .error-icon {
@@ -1045,9 +1203,10 @@ a.tag-chip[aria-current="true"] .tag-chip-count {
   place-items: center;
   width: 4.5rem;
   height: 4.5rem;
+  border: 1px solid var(--lt-border);
   border-radius: 50%;
-  background-color: var(--lt-primary-soft);
-  color: var(--lt-primary-text);
+  background-color: var(--lt-surface-alt);
+  color: var(--lt-muted);
   font-size: 2rem;
 }
 
@@ -1098,12 +1257,12 @@ a.tag-chip[aria-current="true"] .tag-chip-count {
 a.page-link:hover,
 a.page-link:focus-visible,
 a.tag-chip:hover,
-a.tag-chip:focus-visible {
+a.tag-chip:focus-visible,
+.vault-favorite-toggle:hover,
+.vault-favorite-toggle:focus-visible {
   box-shadow: var(--lt-glow-shadow);
 }
 
-.tool-card:hover,
-.tool-card:focus-within,
 .vault-card:hover,
 .vault-card:focus-within {
   box-shadow: var(--lt-shadow), var(--lt-glow-shadow);
@@ -1126,7 +1285,7 @@ a.tag-chip:focus-visible {
   .lt-navbar .nav-link,
   .theme-toggle,
   .navbar-toggler,
-  .tool-card,
+  .vault-favorite-toggle,
   .vault-card,
   a.page-link,
   a.tag-chip {
@@ -1145,8 +1304,8 @@ a.tag-chip:focus-visible {
   a.page-link:focus-visible,
   a.tag-chip:hover,
   a.tag-chip:focus-visible,
-  .tool-card:hover,
-  .tool-card:focus-within,
+  .vault-favorite-toggle:hover,
+  .vault-favorite-toggle:focus-visible,
   .vault-card:hover,
   .vault-card:focus-within {
     transform: translateY(-1px);
@@ -1158,7 +1317,7 @@ a.tag-chip:focus-visible {
   .navbar-toggler:active,
   a.page-link:active,
   a.tag-chip:active,
-  .tool-card:active,
+  .vault-favorite-toggle:active,
   .vault-card:active {
     transform: none;
   }

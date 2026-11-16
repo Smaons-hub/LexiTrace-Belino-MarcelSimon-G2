@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Review vault entries · LexiTrace{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <a class="d-inline-block mb-3" href="{% url 'accounts:admin_dashboard' %}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to the dashboard</a>
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+    <div>
+      <h1 class="h2 fw-bold mb-1">Review vault entries</h1>
+      <p class="text-body-secondary mb-0" id="admin-entry-total">
+        {% if query %}{{ total }} result{{ total|pluralize }} for &ldquo;{{ query }}&rdquo;.{% else %}{{ total }} word{{ total|pluralize }} saved by learners.{% endif %}
+      </p>
+    </div>
+    <form method="get" action="{% url 'vault:admin_entry_list' %}" class="admin-search" id="admin-entry-search" role="search">
+      <label class="form-label" for="admin-entry-q">Search by word or owner</label>
+      <div class="input-group search-input-group">
+        <input type="search" class="form-control" id="admin-entry-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+      </div>
+    </form>
+  </div>
+
+  {% if page.object_list %}
+    <div class="card mb-4" id="admin-entries">
+      <div class="card-body p-4">
+        <div class="table-responsive">
+          <table class="table table-stack align-middle mb-0">
+            <caption class="visually-hidden">Vault entries, newest first</caption>
+            <thead>
+              <tr>
+                <th scope="col">Word</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Created</th>
+                <th scope="col">Tags</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for entry in page.object_list %}
+                <tr>
+                  <th scope="row" class="vault-word admin-entry-word" data-label="Word">{{ entry.word }}</th>
+                  <td class="text-break" data-label="Owner">{{ entry.user.username }}</td>
+                  <td class="text-nowrap" data-label="Created"><time datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|date:"M j, Y" }}</time></td>
+                  <td data-label="Tags">
+                    {% if entry.tags.all %}
+                      <ul class="tag-list">
+                        {% for tag in entry.tags.all %}
+                          <li class="tag-chip">{{ tag.name }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <span class="text-body-secondary">None</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-end table-stack-actions">
+                    <a class="btn btn-outline-primary btn-sm" href="{% url 'vault:admin_entry_detail' entry.pk %}">View<span class="visually-hidden"> {{ entry.word }} by {{ entry.user.username }}</span></a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {% if page.has_other_pages %}
+      <nav aria-label="Entry pages">
+        <ul class="pagination justify-content-center flex-wrap mb-0">
+          {% if page.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">Previous</a></li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+          {% for number in page.paginator.page_range %}
+            {% if number == page.number %}
+              <li class="page-item active" aria-current="page"><span class="page-link">{{ number }}</span></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ number }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}" aria-label="Page {{ number }}">{{ number }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">Next</a></li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% elif query %}
+    <div class="card" id="admin-entries-no-results">
+      <div class="card-body p-5 text-center">
+        <span class="empty-state-icon mb-3" aria-hidden="true"><i class="bi bi-search"></i></span>
+        <h2 class="h4 fw-bold">No entries match your search</h2>
+        <p class="text-body-secondary mx-auto vault-empty-text">Nothing was found for &ldquo;{{ query }}&rdquo;. Try part of a word or part of a username.</p>
+        <a class="btn btn-primary" href="{% url 'vault:admin_entry_list' %}">Show all entries</a>
+      </div>
+    </div>
+  {% else %}
+    <div class="card" id="admin-entries-empty">
+      <div class="card-body p-5 text-center">
+        <span class="empty-state-icon mb-3" aria-hidden="true"><i class="bi bi-book"></i></span>
+        <h2 class="h4 fw-bold">No vault entries yet</h2>
+        <p class="text-body-secondary mx-auto mb-0 vault-empty-text">When learners save words to their vaults, the entries will be listed here for review.</p>
+      </div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

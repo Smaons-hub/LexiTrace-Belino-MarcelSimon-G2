@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import MAX_TAGS_PER_ENTRY, VaultEntry, VaultTag, tag_name_problem
+from .models import MAX_TAGS_PER_ENTRY, VaultEntry, VaultTag, normalise_tag_name, tag_name_problem
 
 DUPLICATE_WORD_MESSAGE = 'This word is already in your vault.'
 TOO_MANY_TAGS_MESSAGE = 'A word can have at most 5 tags.'
@@ -89,7 +89,7 @@ class VaultEntryForm(forms.ModelForm):
         names = []
         seen = set()
         for raw_name in self.cleaned_data['new_tags'].split(','):
-            name = raw_name.strip()
+            name = normalise_tag_name(raw_name)
             key = name.lower()
             if not name or key in seen:
                 continue

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}{{ entry.word }} · Review vault entries · LexiTrace{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 col-xl-8">
+      <a class="d-inline-block mb-3" href="{% url 'vault:admin_entry_list' %}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to all entries</a>
+      <article class="card" id="admin-entry">
+        <div class="card-body p-4 p-sm-5">
+          <div class="vault-title-block mb-3">
+            <p class="text-body-secondary fw-semibold mb-1">Read-only review</p>
+            <h1 class="vault-entry-title vault-word mb-2">{{ entry.word }}</h1>
+            <p class="mb-0" id="admin-entry-owner">Saved by <span class="fw-semibold text-break">{{ entry.user.username }}</span></p>
+          </div>
+          <div class="vault-actions mb-4" id="admin-entry-actions">
+            <a class="btn btn-sm vault-delete-btn" id="admin-entry-delete-link" href="{% url 'vault:admin_entry_delete' entry.pk %}"><i class="bi bi-trash me-1" aria-hidden="true"></i>Delete</a>
+          </div>
+
+          <h2 class="vault-section-label">Meaning</h2>
+          <p class="vault-text vault-prose mb-4">{{ entry.meaning|linebreaksbr }}</p>
+
+          <h2 class="vault-section-label">Example sentence</h2>
+          {% if entry.example %}
+            <blockquote class="vault-text vault-prose vault-example mb-4">
+              <p class="mb-0">{{ entry.example|linebreaksbr }}</p>
+            </blockquote>
+          {% else %}
+            <p class="text-body-secondary mb-4">No example.</p>
+          {% endif %}
+
+          <div class="vault-note mb-4" id="admin-entry-memory-anchor">
+            <span class="vault-note-icon" aria-hidden="true"><i class="bi bi-bookmark"></i></span>
+            <div class="vault-note-body">
+              <h2 class="vault-section-label">Memory anchor</h2>
+              {% if entry.memory_anchor %}
+                <p class="vault-text vault-prose mb-0">{{ entry.memory_anchor|linebreaksbr }}</p>
+              {% else %}
+                <p class="text-body-secondary mb-0">No memory anchor.</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row g-4 pt-4 border-top">
+            <div class="col-sm-6">
+              <h2 class="vault-section-label">Tags</h2>
+              {% if tags %}
+                <ul class="tag-list" id="admin-entry-tags">
+                  {% for tag in tags %}
+                    <li class="tag-chip">{{ tag.name }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="text-body-secondary mb-0">No tags.</p>
+              {% endif %}
+            </div>
+            <div class="col-sm-6">
+              <dl class="vault-times mb-0">
+                <dt class="vault-section-label">Favorite</dt>
+                <dd class="mb-3" id="admin-entry-favorite">{% if entry.is_favorite %}Yes{% else %}No{% endif %}</dd>
+                <dt class="vault-section-label">Saved</dt>
+                <dd class="mb-3"><time datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|date:"M j, Y, g:i A" }}</time></dd>
+                <dt class="vault-section-label">Last updated</dt>
+                <dd class="mb-0"><time datetime="{{ entry.updated_at|date:'c' }}">{{ entry.updated_at|date:"M j, Y, g:i A" }}</time></dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}
