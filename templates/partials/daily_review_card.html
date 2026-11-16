@@ -8,15 +8,21 @@
     <div class="daily-review-body">
       <h2 class="h5 fw-bold mb-1" id="daily-review-heading">Daily review</h2>
       {% if daily_review is None %}
-        <p class="mb-1">Your daily review will appear here once the lexicon is available.</p>
-        <p class="daily-review-hint mb-0">Every search you save already builds your history, so you will have words ready to review.</p>
+        <p class="mb-1">Each day, one word from your vault will show up here to keep it fresh.</p>
+        <p class="daily-review-hint mb-3">Your vault is empty for now. Save a word and your first review will be ready.</p>
+        <a class="btn btn-primary btn-sm" id="daily-review-add-link" href="{% url 'vault:create' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add your first word</a>
       {% else %}
-        <dl class="daily-review-entry mb-0">
+        <dl class="daily-review-entry mb-2">
           <dt class="visually-hidden">Word</dt>
           <dd class="daily-review-word mb-1">{{ daily_review.word }}</dd>
           <dt class="visually-hidden">Meaning</dt>
-          <dd class="mb-0">{{ daily_review.meaning }}</dd>
+          <dd class="mb-2">{{ daily_review.meaning|truncatechars:280 }}</dd>
+          {% if daily_review.memory_anchor %}
+            <dt class="vault-section-label">Memory anchor</dt>
+            <dd class="mb-0">{{ daily_review.memory_anchor|truncatechars:280 }}</dd>
+          {% endif %}
         </dl>
+        <a id="daily-review-link" href="{% url 'vault:detail' daily_review.pk %}">Open this word<i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
       {% endif %}
     </div>
   </div>
