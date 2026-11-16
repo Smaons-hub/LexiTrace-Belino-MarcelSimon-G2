@@ -1,6 +1,10 @@
 <section class="card mb-4 daily-review-card" id="daily-review" aria-labelledby="daily-review-heading">
   <div class="card-body p-4 d-flex flex-column flex-sm-row align-items-sm-center gap-3">
-    <span class="feature-icon flex-shrink-0" aria-hidden="true"><i class="bi bi-calendar-check"></i></span>
+    {% if daily_review is None %}
+      <span class="empty-state-icon flex-shrink-0" aria-hidden="true"><i class="bi bi-book"></i></span>
+    {% else %}
+      <span class="feature-icon flex-shrink-0" aria-hidden="true"><i class="bi bi-calendar-check"></i></span>
+    {% endif %}
     <div class="daily-review-body">
       <h2 class="h5 fw-bold mb-1" id="daily-review-heading">Daily review</h2>
       {% if daily_review is None %}
