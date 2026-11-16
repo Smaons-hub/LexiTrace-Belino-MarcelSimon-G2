@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from .decorators import role_required
 from .forms import LoginForm, ProfileForm, RegisterForm, SearchForm
 from .models import SearchHistory, User
-from .services import get_daily_review, get_vault_overview, get_vault_summary
+from .services import get_daily_review, get_vault_counts, get_vault_overview, get_vault_summary
 
 RECENT_SEARCHES_SHOWN = 5
 SEARCH_HISTORY_LIMIT = 20
@@ -150,7 +150,10 @@ def search_clear(request):
 
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html')
+    vault_counts = None
+    if request.user.role == User.Role.LEARNER:
+        vault_counts = get_vault_counts(request.user)
+    return render(request, 'accounts/profile.html', {'vault_counts': vault_counts})
 
 
 @login_required
