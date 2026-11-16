@@ -19,6 +19,7 @@
             <a class="btn btn-outline-primary btn-sm" id="vault-edit-link" href="{% url 'vault:update' entry.pk %}"><i class="bi bi-pencil me-1" aria-hidden="true"></i>Edit</a>
             <form method="post" action="{% url 'vault:toggle_favorite' entry.pk %}" id="vault-favorite-form">
               {% csrf_token %}
+              <input type="hidden" name="next" value="{% url 'vault:detail' entry.pk %}">
               <button type="submit" class="btn btn-sm vault-favorite-btn"><i class="bi {% if entry.is_favorite %}bi-bookmark-star-fill{% else %}bi-bookmark-star{% endif %} me-1" aria-hidden="true"></i>{% if entry.is_favorite %}Remove favorite{% else %}Add to favorites{% endif %}</button>
             </form>
             <a class="btn btn-sm vault-delete-btn" id="vault-delete-link" href="{% url 'vault:delete' entry.pk %}"><i class="bi bi-trash me-1" aria-hidden="true"></i>Delete</a>
