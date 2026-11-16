@@ -33,8 +33,12 @@ TAG_CHARACTERS_PATTERN = re.compile(r'(?:[^\W_]|[ \-])+')
 TAG_CONTENT_PATTERN = re.compile(r'[^\W_]')
 
 
+def normalise_tag_name(name):
+    return ' '.join((name or '').split())
+
+
 def tag_name_problem(name):
-    name = (name or '').strip()
+    name = normalise_tag_name(name)
     if not name:
         return ValidationError(TAG_BLANK_MESSAGE, code='blank')
     if not TAG_CHARACTERS_PATTERN.fullmatch(name):
@@ -88,10 +92,11 @@ class VaultTag(models.Model):
 
     def clean(self):
         super().clean()
-        self.name = (self.name or '').strip()
+        self.name = normalise_tag_name(self.name)
 
     @classmethod
     def get_or_create_for_user(cls, user, name):
+        name = normalise_tag_name(name)
         tag = cls.objects.filter(user=user, name__iexact=name).first()
         if tag is not None:
             return tag
