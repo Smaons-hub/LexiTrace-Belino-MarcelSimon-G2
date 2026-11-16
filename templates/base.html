@@ -45,6 +45,11 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:dashboard' %}"{% if request.resolver_match.url_name == 'learner_dashboard' or request.resolver_match.url_name == 'admin_dashboard' %} aria-current="page"{% endif %}><i class="bi bi-grid me-1" aria-hidden="true"></i>Dashboard</a>
             </li>
+            {% if user.role == 'learner' %}
+              <li class="nav-item">
+                <a id="nav-vault" class="nav-link" href="{% url 'vault:list' %}"{% if request.resolver_match.namespace == 'vault' %} aria-current="page"{% endif %}><i class="bi bi-bookmark-heart me-1" aria-hidden="true"></i>My vault</a>
+              </li>
+            {% endif %}
             <li class="nav-item">
               <a class="nav-link" href="{% url 'accounts:profile' %}"{% if request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'profile_edit' %} aria-current="page"{% endif %}><i class="bi bi-person-circle me-1" aria-hidden="true"></i>Profile</a>
             </li>

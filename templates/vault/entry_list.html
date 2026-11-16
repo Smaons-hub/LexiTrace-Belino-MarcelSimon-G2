@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My vault · LexiTrace{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+      <h1 class="h2 fw-bold mb-1">My vault</h1>
+      <p class="text-body-secondary mb-0">
+        {% if total %}{{ total }} word{{ total|pluralize }} saved.{% else %}The words you want to remember, all in one place.{% endif %}
+      </p>
+    </div>
+    {% if total %}
+      <a class="btn btn-primary" href="{% url 'vault:create' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add a word</a>
+    {% endif %}
+  </div>
+
+  {% if page.object_list %}
+    <ul class="row g-4 list-unstyled mb-4" id="vault-entries">
+      {% for entry in page.object_list %}
+        <li class="col-md-6">
+          {% include "vault/partials/entry_card.html" %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if page.has_other_pages %}
+      <nav aria-label="Vault pages">
+        <ul class="pagination justify-content-center flex-wrap mb-0">
+          {% if page.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}">Previous</a></li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+          {% for number in page.paginator.page_range %}
+            {% if number == page.number %}
+              <li class="page-item active" aria-current="page"><span class="page-link">{{ number }}</span></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ number }}" aria-label="Page {{ number }}">{{ number }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">Next</a></li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="card" id="vault-empty">
+      <div class="card-body p-5 text-center">
+        <span class="feature-icon mb-3" aria-hidden="true"><i class="bi bi-bookmark-heart"></i></span>
+        <h2 class="h4 fw-bold">Your vault is empty</h2>
+        <p class="text-body-secondary mx-auto vault-empty-text">Save a word with its meaning, an example and your own memory trick, and it will wait here for you.</p>
+        <a class="btn btn-primary" href="{% url 'vault:create' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add your first word</a>
+      </div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
