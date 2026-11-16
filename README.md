@@ -226,7 +226,7 @@ Test accounts are listed in the PD2 completion report. No passwords are stored i
 ## Known limitations
 
 - When an admin deletes an entry, the learner is not notified.
-- On phones, the stacked moderation table may be read as plain text by some screen readers.
+- On phones, the stacked tables (the moderation list and the recent users table) may be read as plain text by some screen readers.
 - Messages in the message area may not be announced by screen readers when a page loads.
 - Contextual search is not built yet. The dashboard search only saves your searches.
 
