@@ -99,7 +99,7 @@
       <h2 class="h5 fw-bold mb-3" id="recent-users-heading"><i class="bi bi-clock-history me-2 brand-accent" aria-hidden="true"></i>Recent users</h2>
       {% if recent_users %}
         <div class="table-responsive">
-          <table class="table align-middle mb-0">
+          <table class="table table-stack align-middle mb-0">
             <caption class="visually-hidden">The 10 newest accounts</caption>
             <thead>
               <tr>
@@ -113,17 +113,17 @@
             <tbody>
               {% for member in recent_users %}
                 <tr>
-                  <td class="fw-semibold">{{ member.username }}</td>
-                  <td>{{ member.email }}</td>
-                  <td>
+                  <td class="fw-semibold text-break" data-label="Username">{{ member.username }}</td>
+                  <td class="text-break" data-label="Email">{{ member.email }}</td>
+                  <td data-label="Role">
                     {% if member.role == 'admin' %}
                       <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle">{{ member.get_role_display }}</span>
                     {% else %}
                       <span class="badge rounded-pill badge-soon">{{ member.get_role_display }}</span>
                     {% endif %}
                   </td>
-                  <td class="text-nowrap">{{ member.date_joined|date:"M j, Y" }}</td>
-                  <td>
+                  <td class="text-nowrap" data-label="Date joined">{{ member.date_joined|date:"M j, Y" }}</td>
+                  <td data-label="Status">
                     {% if member.is_active %}
                       <span class="text-nowrap"><i class="bi bi-check-circle-fill me-1" aria-hidden="true"></i>Active</span>
                     {% else %}
