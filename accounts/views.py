@@ -3,13 +3,18 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db import transaction
 from django.db.models import Count, Q
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from .decorators import role_required
-from .forms import LoginForm, ProfileForm, RegisterForm
-from .models import User
+from .forms import LoginForm, ProfileForm, RegisterForm, SearchForm
+from .models import SearchHistory, User
+
+RECENT_SEARCHES_SHOWN = 5
+SEARCH_HISTORY_LIMIT = 20
 
 # Create your views here.
 
@@ -62,9 +67,16 @@ def dashboard(request):
     return redirect('accounts:learner_dashboard')
 
 
+def search_panel_context(request):
+    return {
+        'search_form': SearchForm(),
+        'recent_searches': request.user.search_history.all()[:RECENT_SEARCHES_SHOWN],
+    }
+
+
 @role_required(User.Role.LEARNER)
 def learner_dashboard(request):
-    return render(request, 'accounts/learner_dashboard.html')
+    return render(request, 'accounts/learner_dashboard.html', search_panel_context(request))
 
 
 @role_required(User.Role.ADMIN)
@@ -84,7 +96,50 @@ def admin_dashboard(request):
     return render(request, 'accounts/admin_dashboard.html', {
         'stats': stats,
         'recent_users': recent_users,
+        **search_panel_context(request),
     })
+
+
+@login_required
+@require_POST
+def search_submit(request):
+    form = SearchForm(request.POST)
+    if not form.is_valid():
+        messages.error(request, form.errors['query'][0])
+        return redirect('accounts:dashboard')
+    query = form.cleaned_data['query']
+    history = request.user.search_history
+    with transaction.atomic():
+        existing = history.select_for_update().filter(query__iexact=query).first()
+        if existing:
+            existing.created_at = timezone.now()
+            existing.save(update_fields=['created_at'])
+        else:
+            history.create(query=query)
+        keep = history.values_list('pk', flat=True)[:SEARCH_HISTORY_LIMIT]
+        history.exclude(pk__in=list(keep)).delete()
+    messages.success(request, f'Search for "{query}" saved. Dictionary results are not available yet.')
+    return redirect('accounts:dashboard')
+
+
+@login_required
+@require_POST
+def search_delete(request, pk):
+    entry = get_object_or_404(SearchHistory, pk=pk, user=request.user)
+    entry.delete()
+    messages.success(request, f'Removed "{entry.query}" from your recent searches.')
+    return redirect('accounts:dashboard')
+
+
+@login_required
+@require_POST
+def search_clear(request):
+    deleted, _ = request.user.search_history.all().delete()
+    if deleted:
+        messages.success(request, 'Your recent searches have been cleared.')
+    else:
+        messages.info(request, 'You have no recent searches to clear.')
+    return redirect('accounts:dashboard')
 
 
 @login_required
