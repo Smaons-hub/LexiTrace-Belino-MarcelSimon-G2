@@ -547,6 +547,23 @@ textarea.form-control {
   min-height: 5rem;
 }
 
+.choice-legend {
+  float: none;
+  font-size: 1rem;
+}
+
+.choice-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+}
+
+.choice-list .form-check {
+  min-width: 0;
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
+}
+
 .form-check-input {
   border-color: var(--lt-input-border);
 }
@@ -891,6 +908,83 @@ textarea.form-control {
   font-size: 0.9rem;
 }
 
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 100%;
+  padding: 0.2rem 0.7rem;
+  border: 1px solid var(--lt-border);
+  border-radius: var(--bs-border-radius-pill);
+  background-color: var(--lt-surface-alt);
+  color: var(--lt-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.tag-chip-count {
+  color: var(--lt-muted);
+  font-weight: 500;
+}
+
+a.tag-chip:hover,
+a.tag-chip:focus-visible {
+  border-color: var(--lt-primary);
+  color: var(--lt-primary-text);
+}
+
+a.tag-chip[aria-current="true"],
+a.tag-chip[aria-current="true"]:hover,
+a.tag-chip[aria-current="true"]:focus-visible {
+  border-color: var(--lt-primary);
+  background-color: var(--lt-primary);
+  color: var(--lt-on-primary);
+}
+
+a.tag-chip[aria-current="true"] .tag-chip-count {
+  color: var(--lt-on-primary);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.85rem;
+  border-bottom: 1px solid var(--lt-border);
+}
+
+.tag-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tag-row-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  min-width: 0;
+}
+
+.tag-row-count {
+  color: var(--lt-muted);
+  font-size: 0.9rem;
+}
+
 .vault-empty-text {
   max-width: 28rem;
 }
@@ -1002,7 +1096,9 @@ textarea.form-control {
 .navbar-toggler:hover,
 .navbar-toggler:focus-visible,
 a.page-link:hover,
-a.page-link:focus-visible {
+a.page-link:focus-visible,
+a.tag-chip:hover,
+a.tag-chip:focus-visible {
   box-shadow: var(--lt-glow-shadow);
 }
 
@@ -1032,7 +1128,8 @@ a.page-link:focus-visible {
   .navbar-toggler,
   .tool-card,
   .vault-card,
-  a.page-link {
+  a.page-link,
+  a.tag-chip {
     transition: color 0.2s ease, border-color 0.2s ease, background-color 160ms ease-out, box-shadow 160ms ease-out, transform 160ms ease-out;
   }
 
@@ -1046,6 +1143,8 @@ a.page-link:focus-visible {
   .navbar-toggler:focus-visible,
   a.page-link:hover,
   a.page-link:focus-visible,
+  a.tag-chip:hover,
+  a.tag-chip:focus-visible,
   .tool-card:hover,
   .tool-card:focus-within,
   .vault-card:hover,
@@ -1058,6 +1157,7 @@ a.page-link:focus-visible {
   .theme-toggle:active,
   .navbar-toggler:active,
   a.page-link:active,
+  a.tag-chip:active,
   .tool-card:active,
   .vault-card:active {
     transform: none;

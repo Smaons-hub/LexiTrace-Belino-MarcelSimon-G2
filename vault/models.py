@@ -1,7 +1,9 @@
+import re
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator, MinLengthValidator, RegexValidator
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.db.models.functions import Lower
 
 # Create your models here.
@@ -18,6 +20,41 @@ word_min_length_validator = MinLengthValidator(
     message='The word must be at least 2 characters long.',
 )
 
+TAG_MIN_LENGTH = 2
+TAG_MAX_LENGTH = 30
+MAX_TAGS_PER_ENTRY = 5
+TAG_UNIQUE_CONSTRAINT = 'vault_tag_unique_name_per_user'
+TAG_BLANK_MESSAGE = 'Enter a tag name.'
+TAG_CHARACTERS_MESSAGE = 'Use only letters, numbers, spaces and hyphens.'
+TAG_CONTENT_MESSAGE = 'A tag needs at least one letter or number.'
+TAG_MIN_LENGTH_MESSAGE = 'A tag must be at least 2 characters long.'
+TAG_MAX_LENGTH_MESSAGE = 'A tag must be 30 characters or fewer.'
+TAG_CHARACTERS_PATTERN = re.compile(r'(?:[^\W_]|[ \-])+')
+TAG_CONTENT_PATTERN = re.compile(r'[^\W_]')
+
+
+def tag_name_problem(name):
+    name = (name or '').strip()
+    if not name:
+        return ValidationError(TAG_BLANK_MESSAGE, code='blank')
+    if not TAG_CHARACTERS_PATTERN.fullmatch(name):
+        return ValidationError(TAG_CHARACTERS_MESSAGE, code='invalid_tag')
+    if not TAG_CONTENT_PATTERN.search(name):
+        return ValidationError(TAG_CONTENT_MESSAGE, code='empty_tag')
+    if len(name) < TAG_MIN_LENGTH:
+        return ValidationError(TAG_MIN_LENGTH_MESSAGE, code='min_length')
+    if len(name) > TAG_MAX_LENGTH:
+        return ValidationError(TAG_MAX_LENGTH_MESSAGE, code='max_length')
+    return None
+
+
+def validate_tag_name(value):
+    if len(value) > TAG_MAX_LENGTH:
+        return
+    problem = tag_name_problem(value)
+    if problem is not None:
+        raise problem
+
 
 class VaultTag(models.Model):
     user = models.ForeignKey(
@@ -25,7 +62,14 @@ class VaultTag(models.Model):
         on_delete=models.CASCADE,
         related_name='vault_tags',
     )
-    name = models.CharField(max_length=30)
+    name = models.CharField(
+        max_length=TAG_MAX_LENGTH,
+        validators=[validate_tag_name],
+        error_messages={
+            'blank': TAG_BLANK_MESSAGE,
+            'max_length': TAG_MAX_LENGTH_MESSAGE,
+        },
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -34,13 +78,30 @@ class VaultTag(models.Model):
             models.UniqueConstraint(
                 'user',
                 Lower('name'),
-                name='vault_tag_unique_name_per_user',
+                name=TAG_UNIQUE_CONSTRAINT,
                 violation_error_message='You already have a tag with this name.',
             ),
         ]
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        super().clean()
+        self.name = (self.name or '').strip()
+
+    @classmethod
+    def get_or_create_for_user(cls, user, name):
+        tag = cls.objects.filter(user=user, name__iexact=name).first()
+        if tag is not None:
+            return tag
+        try:
+            with transaction.atomic():
+                return cls.objects.create(user=user, name=name)
+        except IntegrityError as error:
+            if TAG_UNIQUE_CONSTRAINT not in str(error):
+                raise
+            return cls.objects.get(user=user, name__iexact=name)
 
 
 class VaultEntry(models.Model):

@@ -9,6 +9,18 @@
       {% endif %}
     </div>
     <p class="mb-2 vault-text">{{ entry.meaning|truncatechars:160 }}</p>
+    {% with tags=entry.tags.all %}
+      {% if tags %}
+        <ul class="tag-list mb-2" aria-label="Tags">
+          {% for tag in tags|slice:":3" %}
+            <li class="tag-chip">{{ tag.name }}</li>
+          {% endfor %}
+          {% if tags|length > 3 %}
+            <li class="tag-chip">+{{ tags|length|add:"-3" }}<span class="visually-hidden"> more</span></li>
+          {% endif %}
+        </ul>
+      {% endif %}
+    {% endwith %}
     <p class="vault-meta mb-0">Saved <time datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|date:"M j, Y" }}</time></p>
   </div>
 </article>
