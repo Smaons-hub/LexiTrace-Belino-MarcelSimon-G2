@@ -20,20 +20,24 @@ def get_daily_review(user):
     return entries[index]
 
 
-def get_vault_summary(user):
+def get_vault_counts(user):
     counts = user.vault_entries.aggregate(
         words=Count('pk'),
         favorites=Count('pk', filter=Q(is_favorite=True)),
     )
-    recent = []
-    if counts['words']:
-        recent = list(user.vault_entries.order_by('-created_at', '-pk')[:RECENT_WORDS_SHOWN])
     return {
         'words': counts['words'],
         'favorites': counts['favorites'],
         'tags': user.vault_tags.count(),
-        'recent': recent,
     }
+
+
+def get_vault_summary(user):
+    summary = get_vault_counts(user)
+    summary['recent'] = []
+    if summary['words']:
+        summary['recent'] = list(user.vault_entries.order_by('-created_at', '-pk')[:RECENT_WORDS_SHOWN])
+    return summary
 
 
 def get_vault_overview():

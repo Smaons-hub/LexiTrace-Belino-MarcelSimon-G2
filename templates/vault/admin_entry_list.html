@@ -25,7 +25,7 @@
     <div class="card mb-4" id="admin-entries">
       <div class="card-body p-4">
         <div class="table-responsive">
-          <table class="table align-middle mb-0">
+          <table class="table table-stack align-middle mb-0">
             <caption class="visually-hidden">Vault entries, newest first</caption>
             <thead>
               <tr>
@@ -39,10 +39,10 @@
             <tbody>
               {% for entry in page.object_list %}
                 <tr>
-                  <th scope="row" class="vault-word admin-entry-word">{{ entry.word }}</th>
-                  <td class="text-break">{{ entry.user.username }}</td>
-                  <td class="text-nowrap"><time datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|date:"M j, Y" }}</time></td>
-                  <td>
+                  <th scope="row" class="vault-word admin-entry-word" data-label="Word">{{ entry.word }}</th>
+                  <td class="text-break" data-label="Owner">{{ entry.user.username }}</td>
+                  <td class="text-nowrap" data-label="Created"><time datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|date:"M j, Y" }}</time></td>
+                  <td data-label="Tags">
                     {% if entry.tags.all %}
                       <ul class="tag-list">
                         {% for tag in entry.tags.all %}
@@ -53,7 +53,7 @@
                       <span class="text-body-secondary">None</span>
                     {% endif %}
                   </td>
-                  <td class="text-end">
+                  <td class="text-end table-stack-actions">
                     <a class="btn btn-outline-primary btn-sm" href="{% url 'vault:admin_entry_detail' entry.pk %}">View<span class="visually-hidden"> {{ entry.word }} by {{ entry.user.username }}</span></a>
                   </td>
                 </tr>

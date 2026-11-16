@@ -6,48 +6,79 @@
 <section class="container py-5">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-xl-7">
-      <div class="card">
+      <div class="card" id="profile-card">
         <div class="card-body p-4 p-sm-5">
           <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-4 mb-4">
             {% include "partials/avatar.html" with person=user size=96 %}
-            <div class="flex-grow-1">
+            <div class="flex-grow-1 profile-heading">
               <p class="text-body-secondary fw-semibold mb-1">Your profile</p>
-              <h1 class="h2 fw-bold mb-2">{{ user.display_name }}</h1>
-              <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle">{{ user.get_role_display }}</span>
+              <h1 class="h2 fw-bold mb-0">{{ user.display_name }}</h1>
             </div>
             <a class="btn btn-primary align-self-sm-start" href="{% url 'accounts:profile_edit' %}"><i class="bi bi-pencil me-2" aria-hidden="true"></i>Edit profile</a>
           </div>
 
-          <hr class="mb-4">
+          <div class="profile-section">
+            <h2 class="vault-section-label">Account</h2>
+            <dl class="row profile-details mb-0" id="profile-details">
+              <dt class="col-sm-5">Username</dt>
+              <dd class="col-sm-7 text-break">{{ user.username }}</dd>
 
-          <dl class="row profile-details mb-0" id="profile-details">
-            <dt class="col-sm-5">Username</dt>
-            <dd class="col-sm-7">{{ user.username }}</dd>
+              <dt class="col-sm-5">Email</dt>
+              <dd class="col-sm-7 text-break">{{ user.email }}</dd>
 
-            <dt class="col-sm-5">Email</dt>
-            <dd class="col-sm-7 text-break">{{ user.email }}</dd>
+              <dt class="col-sm-5">Role</dt>
+              <dd class="col-sm-7"><span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle" id="profile-role">{{ user.get_role_display }}</span></dd>
 
-            <dt class="col-sm-5">Contact number</dt>
-            <dd class="col-sm-7">{{ user.contact_number|default:"—" }}</dd>
+              <dt class="col-sm-5">Member since</dt>
+              <dd class="col-sm-7">{{ user.date_joined|date:"M j, Y" }}</dd>
 
-            <dt class="col-sm-5">Language level</dt>
-            <dd class="col-sm-7">{{ user.get_language_level_display }}</dd>
+              <dt class="col-sm-5">Last login</dt>
+              <dd class="col-sm-7 mb-0">{% if user.last_login %}{{ user.last_login|date:"M j, Y, g:i A" }}{% else %}&mdash;{% endif %}</dd>
+            </dl>
+          </div>
 
-            <dt class="col-sm-5">Offline dictionary download</dt>
-            <dd class="col-sm-7">
-              {% if user.offline_download %}
-                <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle"><i class="bi bi-check-circle me-1" aria-hidden="true"></i>On</span>
-              {% else %}
-                <span class="badge rounded-pill badge-soon"><i class="bi bi-x-circle me-1" aria-hidden="true"></i>Off</span>
-              {% endif %}
-            </dd>
+          <div class="profile-section">
+            <h2 class="vault-section-label">Contact and learning</h2>
+            <dl class="row profile-details mb-0" id="profile-preferences">
+              <dt class="col-sm-5">Contact number</dt>
+              <dd class="col-sm-7">{{ user.contact_number|default:"—" }}</dd>
 
-            <dt class="col-sm-5">Member since</dt>
-            <dd class="col-sm-7">{{ user.date_joined|date:"M j, Y" }}</dd>
+              <dt class="col-sm-5">Language level</dt>
+              <dd class="col-sm-7">{{ user.get_language_level_display }}</dd>
 
-            <dt class="col-sm-5">Last login</dt>
-            <dd class="col-sm-7 mb-0">{% if user.last_login %}{{ user.last_login|date:"M j, Y, g:i A" }}{% else %}—{% endif %}</dd>
-          </dl>
+              <dt class="col-sm-5">Offline dictionary download</dt>
+              <dd class="col-sm-7 mb-0">
+                {% if user.offline_download %}
+                  <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis border border-primary-subtle"><i class="bi bi-check-circle me-1" aria-hidden="true"></i>On</span>
+                {% else %}
+                  <span class="badge rounded-pill badge-soon"><i class="bi bi-x-circle me-1" aria-hidden="true"></i>Off</span>
+                {% endif %}
+              </dd>
+            </dl>
+          </div>
+
+          {% if vault_counts %}
+            <div class="profile-section" id="profile-vault">
+              <div class="d-flex flex-wrap justify-content-between align-items-baseline gap-2 mb-2">
+                <h2 class="vault-section-label mb-0">Your vault</h2>
+                <a id="profile-vault-link" href="{% url 'vault:list' %}">Open my vault<i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
+              </div>
+              <dl class="stat-row mb-0" id="profile-vault-counts">
+                <div class="stat-tile">
+                  <dt>Words</dt>
+                  <dd>{{ vault_counts.words }}</dd>
+                </div>
+                <div class="stat-tile">
+                  <dt>Favorites</dt>
+                  <dd>{{ vault_counts.favorites }}</dd>
+                </div>
+                <div class="stat-tile">
+                  <dt>Tags</dt>
+                  <dd>{{ vault_counts.tags }}</dd>
+                </div>
+              </dl>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>

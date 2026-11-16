@@ -21,15 +21,45 @@
     {% endif %}
   </div>
 
-  {% if filter_tags %}
-    <nav class="mb-4" aria-label="Filter by tag" id="vault-tag-filter">
-      <ul class="tag-list">
-        <li><a class="tag-chip" href="{% url 'vault:list' %}"{% if not active_tag %} aria-current="true"{% endif %}>All <span class="tag-chip-count">{{ total }}<span class="visually-hidden"> word{{ total|pluralize }}</span></span></a></li>
-        {% for tag in filter_tags %}
-          <li><a class="tag-chip" href="{% url 'vault:list' %}?tag={{ tag.pk }}"{% if tag == active_tag %} aria-current="true"{% endif %}>{{ tag.name }} <span class="tag-chip-count">{{ tag.entry_count }}<span class="visually-hidden"> word{{ tag.entry_count|pluralize }}</span></span></a></li>
-        {% endfor %}
-      </ul>
-    </nav>
+  {% if total %}
+    <form method="get" action="{% url 'vault:list' %}" class="vault-toolbar mb-3" id="vault-search" role="search">
+      {% if active_tag %}<input type="hidden" name="tag" value="{{ active_tag.pk }}">{% endif %}
+      {% if favorites_only %}<input type="hidden" name="fav" value="1">{% endif %}
+      <div class="vault-toolbar-search">
+        <label class="form-label" for="vault-q">Search your vault</label>
+        <input type="search" class="form-control" id="vault-q" name="q" value="{{ query }}" maxlength="100" autocomplete="off" placeholder="Word, meaning, example or memory anchor">
+      </div>
+      <div class="vault-toolbar-sort">
+        <label class="form-label" for="vault-sort">Sort by</label>
+        <select class="form-select" id="vault-sort" name="sort">
+          {% for value, label in sort_choices %}
+            <option value="{{ value }}"{% if value == sort %} selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+    </form>
+
+    <div class="vault-filters mb-4" id="vault-filters">
+      <a class="tag-chip" id="vault-fav-toggle" href="{{ favorites_url }}"{% if favorites_only %} aria-current="true"{% endif %}><i class="bi {% if favorites_only %}bi-bookmark-star-fill{% else %}bi-bookmark-star{% endif %}" aria-hidden="true"></i>Favorites only</a>
+      {% if filter_tags %}
+        <nav aria-label="Filter by tag" id="vault-tag-filter">
+          <ul class="tag-list">
+            <li><a class="tag-chip" href="{{ all_tags_url }}"{% if not active_tag %} aria-current="true"{% endif %}>All <span class="tag-chip-count">{{ total }}<span class="visually-hidden"> word{{ total|pluralize }}</span></span></a></li>
+            {% for tag in filter_tags %}
+              <li><a class="tag-chip" href="{{ tag.filter_url }}"{% if tag == active_tag %} aria-current="true"{% endif %}>{{ tag.name }} <span class="tag-chip-count">{{ tag.entry_count }}<span class="visually-hidden"> word{{ tag.entry_count|pluralize }}</span></span></a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+      {% if filters_active %}
+        <a class="vault-clear-link" id="vault-clear-filters" href="{% url 'vault:list' %}"><i class="bi bi-x-lg me-1" aria-hidden="true"></i>Clear</a>
+      {% endif %}
+    </div>
+
+    {% if filters_active %}
+      <p class="vault-meta mb-3" id="vault-result-count" role="status">{{ result_total }} word{{ result_total|pluralize }} found{% if query %} for &ldquo;{{ query }}&rdquo;{% endif %}.</p>
+    {% endif %}
   {% endif %}
 
   {% if page.object_list %}
@@ -45,7 +75,7 @@
       <nav aria-label="Vault pages">
         <ul class="pagination justify-content-center flex-wrap mb-0">
           {% if page.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}{% if active_tag %}&amp;tag={{ active_tag.pk }}{% endif %}">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}{{ page_query }}">Previous</a></li>
           {% else %}
             <li class="page-item disabled"><span class="page-link">Previous</span></li>
           {% endif %}
@@ -53,18 +83,27 @@
             {% if number == page.number %}
               <li class="page-item active" aria-current="page"><span class="page-link">{{ number }}</span></li>
             {% else %}
-              <li class="page-item"><a class="page-link" href="?page={{ number }}{% if active_tag %}&amp;tag={{ active_tag.pk }}{% endif %}" aria-label="Page {{ number }}">{{ number }}</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ number }}{{ page_query }}" aria-label="Page {{ number }}">{{ number }}</a></li>
             {% endif %}
           {% endfor %}
           {% if page.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}{% if active_tag %}&amp;tag={{ active_tag.pk }}{% endif %}">Next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}{{ page_query }}">Next</a></li>
           {% else %}
             <li class="page-item disabled"><span class="page-link">Next</span></li>
           {% endif %}
         </ul>
       </nav>
     {% endif %}
-  {% elif active_tag %}
+  {% elif total and query or total and favorites_only %}
+    <div class="card" id="vault-no-results">
+      <div class="card-body p-5 text-center">
+        <span class="empty-state-icon mb-3" aria-hidden="true"><i class="bi bi-search"></i></span>
+        <h2 class="h4 fw-bold">No words match your search</h2>
+        <p class="text-body-secondary mx-auto vault-empty-text">Try a different word or fewer filters. Nothing is lost: clear the filters to see your whole vault.</p>
+        <a class="btn btn-primary" href="{% url 'vault:list' %}">Clear filters</a>
+      </div>
+    </div>
+  {% elif total and active_tag %}
     <div class="card" id="vault-filter-empty">
       <div class="card-body p-5 text-center">
         <span class="empty-state-icon mb-3" aria-hidden="true"><i class="bi bi-tags"></i></span>

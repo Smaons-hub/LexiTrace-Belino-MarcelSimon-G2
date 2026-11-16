@@ -3,7 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
+from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme, urlencode
 from django.views.decorators.http import require_POST
 
 from accounts.decorators import role_required
@@ -17,6 +20,18 @@ from .models import VaultEntry, VaultTag
 ENTRIES_PER_PAGE = 10
 ADMIN_ENTRIES_PER_PAGE = 10
 ADMIN_SEARCH_MAX_LENGTH = 100
+VAULT_SEARCH_MAX_LENGTH = 100
+DEFAULT_SORT = 'newest'
+SORT_ORDERS = {
+    'newest': ('-created_at', '-pk'),
+    'oldest': ('created_at', 'pk'),
+    'az': (Lower('word'), 'pk'),
+}
+SORT_CHOICES = (
+    ('newest', 'Newest first'),
+    ('oldest', 'Oldest first'),
+    ('az', 'Word A to Z'),
+)
 UNIQUE_WORD_CONSTRAINT = 'vault_entry_unique_word_per_user'
 
 
@@ -31,6 +46,20 @@ def save_entry(form):
         return None
 
 
+def list_url(query='', favorites_only=False, tag=None, sort=DEFAULT_SORT):
+    params = {}
+    if query:
+        params['q'] = query
+    if favorites_only:
+        params['fav'] = '1'
+    if tag is not None:
+        params['tag'] = tag.pk
+    if sort != DEFAULT_SORT:
+        params['sort'] = sort
+    base = reverse('vault:list')
+    return f'{base}?{urlencode(params)}' if params else base
+
+
 @login_required
 @role_required(User.Role.LEARNER)
 def entry_list(request):
@@ -39,18 +68,45 @@ def entry_list(request):
     active_tag = None
     if requested_tag.isascii() and requested_tag.isdigit():
         active_tag = next((tag for tag in user_tags if tag.pk == int(requested_tag)), None)
+    query = request.GET.get('q', '').strip()[:VAULT_SEARCH_MAX_LENGTH].strip()
+    favorites_only = request.GET.get('fav') == '1'
+    sort = request.GET.get('sort')
+    if sort not in SORT_ORDERS:
+        sort = DEFAULT_SORT
     entries = request.user.vault_entries.prefetch_related('tags')
     total = entries.count()
     if active_tag is not None:
         entries = entries.filter(tags=active_tag)
-    paginator = Paginator(entries, ENTRIES_PER_PAGE)
+    if query:
+        entries = entries.filter(
+            Q(word__icontains=query)
+            | Q(meaning__icontains=query)
+            | Q(example__icontains=query)
+            | Q(memory_anchor__icontains=query)
+        )
+    if favorites_only:
+        entries = entries.filter(is_favorite=True)
+    paginator = Paginator(entries.order_by(*SORT_ORDERS[sort]), ENTRIES_PER_PAGE)
     page = paginator.get_page(request.GET.get('page'))
+    filter_tags = [tag for tag in user_tags if tag.entry_count or tag == active_tag]
+    for tag in filter_tags:
+        tag.filter_url = list_url(query, favorites_only, tag, sort)
+    page_query = list_url(query, favorites_only, active_tag, sort).partition('?')[2]
     context = {
         'page': page,
         'total': total,
+        'result_total': paginator.count,
         'active_tag': active_tag,
-        'filter_tags': [tag for tag in user_tags if tag.entry_count or tag == active_tag],
+        'filter_tags': filter_tags,
         'has_tags': bool(user_tags),
+        'query': query,
+        'favorites_only': favorites_only,
+        'sort': sort,
+        'sort_choices': SORT_CHOICES,
+        'filters_active': bool(query or favorites_only or active_tag),
+        'all_tags_url': list_url(query, favorites_only, None, sort),
+        'favorites_url': list_url(query, not favorites_only, active_tag, sort),
+        'page_query': f'&{page_query}' if page_query else '',
     }
     return render(request, 'vault/entry_list.html', context)
 
@@ -122,7 +178,10 @@ def entry_toggle_favorite(request, pk):
         messages.success(request, f'"{entry.word}" was added to your favorites.')
     else:
         messages.success(request, f'"{entry.word}" was removed from your favorites.')
-    return redirect('vault:detail', pk=entry.pk)
+    next_url = request.POST.get('next', '')
+    if next_url.startswith('/') and url_has_allowed_host_and_scheme(next_url, allowed_hosts=None):
+        return redirect(next_url)
+    return redirect('vault:list')
 
 
 @login_required
