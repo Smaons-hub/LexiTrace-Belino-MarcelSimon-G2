@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 from .decorators import role_required
 from .forms import LoginForm, ProfileForm, RegisterForm, SearchForm
 from .models import SearchHistory, User
+from .services import get_daily_review
 
 RECENT_SEARCHES_SHOWN = 5
 SEARCH_HISTORY_LIMIT = 20
@@ -76,7 +77,10 @@ def search_panel_context(request):
 
 @role_required(User.Role.LEARNER)
 def learner_dashboard(request):
-    return render(request, 'accounts/learner_dashboard.html', search_panel_context(request))
+    return render(request, 'accounts/learner_dashboard.html', {
+        **search_panel_context(request),
+        'daily_review': get_daily_review(request.user),
+    })
 
 
 @role_required(User.Role.ADMIN)

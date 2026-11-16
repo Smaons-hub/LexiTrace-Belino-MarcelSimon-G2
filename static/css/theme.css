@@ -460,6 +460,26 @@ a {
   padding-block: 1rem;
 }
 
+.daily-review-body {
+  min-width: 0;
+}
+
+.daily-review-hint {
+  color: var(--lt-muted);
+  font-size: 0.9rem;
+}
+
+.daily-review-entry dd {
+  margin-inline-start: 0;
+  overflow-wrap: anywhere;
+}
+
+.daily-review-word {
+  color: var(--lt-primary-text);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
 .error-page {
   padding-block: clamp(3rem, 10vw, 7rem);
   max-width: 32rem;
