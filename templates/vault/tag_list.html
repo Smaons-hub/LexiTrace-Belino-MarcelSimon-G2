@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Manage tags · My vault · LexiTrace{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+      <a class="d-inline-block mb-3" href="{% url 'vault:list' %}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to my vault</a>
+      <div class="card" id="vault-tags">
+        <div class="card-body p-4 p-sm-5">
+          <h1 class="h3 fw-bold mb-1">Manage tags</h1>
+          {% if tags %}
+            <p class="text-body-secondary mb-4">Tags group your words. Deleting a tag never deletes a word.</p>
+            <ul class="list-unstyled mb-0" id="vault-tag-rows">
+              {% for tag in tags %}
+                <li class="tag-row">
+                  <div class="tag-row-main">
+                    <a class="tag-chip" href="{% url 'vault:list' %}?tag={{ tag.pk }}">{{ tag.name }}</a>
+                    <span class="tag-row-count">{% if tag.entry_count %}{{ tag.entry_count }} word{{ tag.entry_count|pluralize }}{% else %}No words{% endif %}</span>
+                  </div>
+                  <a class="btn btn-sm vault-delete-btn" href="{% url 'vault:tag_delete' tag.pk %}"><i class="bi bi-trash me-1" aria-hidden="true"></i>Delete<span class="visually-hidden"> the tag {{ tag.name }}</span></a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="text-center pt-4" id="vault-tags-empty">
+              <span class="empty-state-icon mb-3" aria-hidden="true"><i class="bi bi-tags"></i></span>
+              <h2 class="h4 fw-bold">No tags yet</h2>
+              <p class="text-body-secondary mx-auto vault-empty-text">Tags are made when you add them to a word. Open a word, type a few tags, and they will show up here.</p>
+              <a class="btn btn-primary" href="{% url 'vault:list' %}">Go to my vault</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

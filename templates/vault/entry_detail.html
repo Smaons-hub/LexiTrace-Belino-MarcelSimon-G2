@@ -52,9 +52,9 @@
             <div class="col-sm-6">
               <h2 class="vault-section-label">Tags</h2>
               {% if entry.tags.all %}
-                <ul class="list-inline mb-0" id="vault-entry-tags">
+                <ul class="tag-list" id="vault-entry-tags">
                   {% for tag in entry.tags.all %}
-                    <li class="list-inline-item"><span class="badge rounded-pill badge-soon">{{ tag.name }}</span></li>
+                    <li><a class="tag-chip" href="{% url 'vault:list' %}?tag={{ tag.pk }}">{{ tag.name }}</a></li>
                   {% endfor %}
                 </ul>
               {% else %}
