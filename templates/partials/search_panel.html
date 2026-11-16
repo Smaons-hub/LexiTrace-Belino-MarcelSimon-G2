@@ -1,0 +1,58 @@
+{% load ui %}
+<div class="row g-4 mb-4" id="search-panel">
+  <div class="col-lg-7">
+    <div class="card h-100">
+      <div class="card-body p-4">
+        <h2 class="h5 fw-bold mb-3"><i class="bi bi-search me-2 brand-accent" aria-hidden="true"></i>Search</h2>
+        <form method="post" action="{% url 'accounts:search_submit' %}" id="search-form" role="search">
+          {% csrf_token %}
+          <label class="form-label" for="{{ search_form.query.id_for_label }}">{{ search_form.query.label }}</label>
+          <div class="input-group search-input-group">
+            {{ search_form.query|add_class:"form-control" }}
+            <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1" aria-hidden="true"></i>Search</button>
+          </div>
+          <div class="form-text">Between 2 and 200 characters. Your searches are saved to your history.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card h-100" id="recent-searches">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+          <h2 class="h5 fw-bold mb-0"><i class="bi bi-clock-history me-2 brand-accent" aria-hidden="true"></i>Recent searches</h2>
+          {% if recent_searches %}
+            <form method="post" action="{% url 'accounts:search_clear' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-primary btn-sm" id="search-clear-btn">Clear all</button>
+            </form>
+          {% endif %}
+        </div>
+        {% if recent_searches %}
+          <ul class="list-unstyled mb-0 search-history-list">
+            {% for entry in recent_searches %}
+              <li class="search-history-item">
+                <div class="search-history-text">
+                  <span class="fw-semibold text-break">{{ entry.query }}</span>
+                  <time class="search-history-time" datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|timesince }} ago</time>
+                </div>
+                <form method="post" action="{% url 'accounts:search_delete' entry.pk %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm search-remove-btn" aria-label="Remove &quot;{{ entry.query }}&quot; from recent searches" title="Remove">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                  </button>
+                </form>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="search-empty text-center">
+            <span class="feature-icon mb-2" aria-hidden="true"><i class="bi bi-journal-text"></i></span>
+            <p class="fw-semibold mb-1">No searches yet</p>
+            <p class="text-body-secondary mb-0">Words you look up will show here so you can find them again.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

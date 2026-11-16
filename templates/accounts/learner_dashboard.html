@@ -36,9 +36,13 @@
     </div>
   </div>
 
+  {% include "partials/search_panel.html" %}
+
+  {% include "partials/daily_review_card.html" %}
+
   <h2 class="h4 fw-bold mb-3">Your tools</h2>
   <div class="row g-4">
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card feature-card">
         <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-start mb-3">
@@ -50,19 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card feature-card">
-        <div class="card-body p-4">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <span class="feature-icon" aria-hidden="true"><i class="bi bi-clock-history"></i></span>
-            <span class="badge rounded-pill badge-soon">Coming soon</span>
-          </div>
-          <h3 class="h5 fw-bold">Recent searches</h3>
-          <p class="text-body-secondary mb-0">Jump back to the words you looked up lately.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
       <div class="card feature-card">
         <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-start mb-3">

@@ -404,6 +404,82 @@ a {
   font-weight: 600;
 }
 
+.search-input-group > .form-control {
+  border-top-left-radius: var(--lt-radius);
+  border-bottom-left-radius: var(--lt-radius);
+}
+
+.search-input-group > .btn {
+  border-top-right-radius: var(--lt-radius);
+  border-bottom-right-radius: var(--lt-radius);
+}
+
+.search-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.6rem;
+  border-bottom: 1px solid var(--lt-border);
+}
+
+.search-history-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.search-history-item:first-child {
+  padding-top: 0;
+}
+
+.search-history-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.search-history-time {
+  color: var(--lt-muted);
+  font-size: 0.85rem;
+}
+
+.search-remove-btn {
+  --bs-btn-padding-x: 0.5rem;
+  --bs-btn-color: var(--lt-muted);
+  --bs-btn-border-color: var(--lt-border);
+  --bs-btn-hover-color: var(--lt-primary-text);
+  --bs-btn-hover-bg: var(--lt-primary-soft);
+  --bs-btn-hover-border-color: var(--lt-primary);
+  --bs-btn-active-color: var(--lt-primary-text);
+  --bs-btn-active-bg: var(--lt-primary-soft);
+  --bs-btn-active-border-color: var(--lt-primary);
+  flex-shrink: 0;
+}
+
+.search-empty {
+  padding-block: 1rem;
+}
+
+.daily-review-body {
+  min-width: 0;
+}
+
+.daily-review-hint {
+  color: var(--lt-muted);
+  font-size: 0.9rem;
+}
+
+.daily-review-entry dd {
+  margin-inline-start: 0;
+  overflow-wrap: anywhere;
+}
+
+.daily-review-word {
+  color: var(--lt-primary-text);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
 .error-page {
   padding-block: clamp(3rem, 10vw, 7rem);
   max-width: 32rem;

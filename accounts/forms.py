@@ -98,6 +98,27 @@ class LoginForm(AuthenticationForm):
         return user.check_password(password) and not user.is_active
 
 
+class SearchForm(forms.Form):
+    query = forms.CharField(
+        label='Word or phrase',
+        min_length=2,
+        max_length=200,
+        strip=True,
+        error_messages={
+            'required': 'Enter a word or phrase to search.',
+            'min_length': 'Your search must be at least 2 characters long.',
+            'max_length': 'Your search must be 200 characters or fewer.',
+        },
+        widget=forms.TextInput(attrs={
+            'placeholder': 'e.g. bank',
+            'autocomplete': 'off',
+            'maxlength': 200,
+            'minlength': 2,
+            'spellcheck': 'true',
+        }),
+    )
+
+
 class ProfileForm(forms.ModelForm):
     CONTACT_PATTERN = re.compile(r'^[0-9+\-()\s]+$')
     MAX_PHOTO_BYTES = 2 * 1024 * 1024

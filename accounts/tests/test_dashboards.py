@@ -69,4 +69,4 @@ class DashboardTests(TestCase):
         response = self.client.get(reverse('accounts:learner_dashboard'))
         self.assertNotContains(response, 'id="admin-stats"')
         self.assertNotContains(response, 'id="recent-users"')
-        self.assertContains(response, 'Coming soon', count=3)
+        self.assertContains(response, 'Coming soon', count=2)

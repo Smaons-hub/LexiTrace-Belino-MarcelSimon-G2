@@ -1,0 +1,19 @@
+<section class="card mb-4 daily-review-card" id="daily-review" aria-labelledby="daily-review-heading">
+  <div class="card-body p-4 d-flex flex-column flex-sm-row align-items-sm-center gap-3">
+    <span class="feature-icon flex-shrink-0" aria-hidden="true"><i class="bi bi-calendar-check"></i></span>
+    <div class="daily-review-body">
+      <h2 class="h5 fw-bold mb-1" id="daily-review-heading">Daily review</h2>
+      {% if daily_review is None %}
+        <p class="mb-1">Your daily review will appear here once the lexicon is available.</p>
+        <p class="daily-review-hint mb-0">Every search you save already builds your history, so you will have words ready to review.</p>
+      {% else %}
+        <dl class="daily-review-entry mb-0">
+          <dt class="visually-hidden">Word</dt>
+          <dd class="daily-review-word mb-1">{{ daily_review.word }}</dd>
+          <dt class="visually-hidden">Meaning</dt>
+          <dd class="mb-0">{{ daily_review.meaning }}</dd>
+        </dl>
+      {% endif %}
+    </div>
+  </div>
+</section>
