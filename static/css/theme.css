@@ -344,7 +344,8 @@ a {
   --bs-btn-border-radius: 0.5rem;
 }
 
-.btn-primary {
+.btn-primary,
+.btn-danger {
   --bs-btn-color: var(--lt-on-primary);
   --bs-btn-bg: var(--lt-primary);
   --bs-btn-border-color: var(--lt-primary);
@@ -360,7 +361,8 @@ a {
   --bs-btn-focus-shadow-rgb: var(--lt-primary-rgb);
 }
 
-.btn-outline-primary {
+.btn-outline-primary,
+.btn-outline-danger {
   --bs-btn-color: var(--lt-primary-text);
   --bs-btn-border-color: var(--lt-primary);
   --bs-btn-hover-color: var(--lt-on-primary);
@@ -671,6 +673,22 @@ a {
 
 .vault-empty-text {
   max-width: 28rem;
+}
+
+.vault-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--lt-primary);
+  border-radius: var(--lt-radius);
+  background-color: var(--lt-primary-soft);
+  color: var(--lt-text);
+  overflow-wrap: anywhere;
+}
+
+.vault-warning .bi {
+  color: var(--lt-primary-text);
 }
 
 .pagination {
