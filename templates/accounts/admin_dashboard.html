@@ -63,6 +63,57 @@
     </div>
   </div>
 
+  <section class="card mb-4" id="vault-overview" aria-labelledby="vault-overview-heading">
+    <div class="card-body p-4">
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
+        <h2 class="h5 fw-bold mb-0" id="vault-overview-heading"><i class="bi bi-journal-bookmark me-2 brand-accent" aria-hidden="true"></i>Vault overview</h2>
+        <a class="btn btn-primary btn-sm" id="review-entries-btn" href="{% url 'vault:admin_entry_list' %}"><i class="bi bi-shield-check me-1" aria-hidden="true"></i>Review vault entries</a>
+      </div>
+      <dl class="stat-row mb-4" id="vault-overview-counts">
+        <div class="stat-tile">
+          <dt>Learners</dt>
+          <dd>{{ stats.learners }}</dd>
+        </div>
+        <div class="stat-tile">
+          <dt>Words</dt>
+          <dd>{{ vault_overview.words }}</dd>
+        </div>
+        <div class="stat-tile">
+          <dt>Tags</dt>
+          <dd>{{ vault_overview.tags }}</dd>
+        </div>
+        <div class="stat-tile">
+          <dt>Words added in the last 7 days</dt>
+          <dd>{{ vault_overview.words_this_week }}</dd>
+        </div>
+      </dl>
+      <h3 class="vault-section-label">Learners with the most words</h3>
+      {% if vault_overview.top_learners %}
+        <div class="table-responsive">
+          <table class="table align-middle mb-0" id="top-learners">
+            <caption class="visually-hidden">The 5 learners with the most saved words</caption>
+            <thead>
+              <tr>
+                <th scope="col">Username</th>
+                <th scope="col" class="text-end">Words</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for learner in vault_overview.top_learners %}
+                <tr>
+                  <td class="fw-semibold text-break">{{ learner.username }}</td>
+                  <td class="text-end">{{ learner.word_count }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-body-secondary mb-0" id="top-learners-empty">No learner has saved a word yet.</p>
+      {% endif %}
+    </div>
+  </section>
+
   <div class="card" id="recent-users">
     <div class="card-body p-4">
       <h2 class="h5 fw-bold mb-3">Recent users</h2>

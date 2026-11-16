@@ -40,6 +40,49 @@
 
   {% include "partials/daily_review_card.html" %}
 
+  <section class="card mb-4" id="vault-summary" aria-labelledby="vault-summary-heading">
+    <div class="card-body p-4">
+      <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
+        <h2 class="h5 fw-bold mb-0" id="vault-summary-heading"><i class="bi bi-bookmark-heart me-2 brand-accent" aria-hidden="true"></i>Your vault</h2>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-outline-primary btn-sm" id="vault-open-link" href="{% url 'vault:list' %}"><i class="bi bi-journal-bookmark me-1" aria-hidden="true"></i>Open my vault</a>
+          <a class="btn btn-primary btn-sm" id="vault-add-link" href="{% url 'vault:create' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add a word</a>
+        </div>
+      </div>
+      {% if vault_summary.words %}
+        <dl class="stat-row mb-4" id="vault-summary-counts">
+          <div class="stat-tile">
+            <dt>Words</dt>
+            <dd>{{ vault_summary.words }}</dd>
+          </div>
+          <div class="stat-tile">
+            <dt>Favorites</dt>
+            <dd>{{ vault_summary.favorites }}</dd>
+          </div>
+          <div class="stat-tile">
+            <dt>Tags</dt>
+            <dd>{{ vault_summary.tags }}</dd>
+          </div>
+        </dl>
+        <h3 class="vault-section-label">Recently added</h3>
+        <ul class="list-unstyled mb-0" id="vault-recent-words">
+          {% for entry in vault_summary.recent %}
+            <li class="recent-word">
+              <a class="recent-word-link vault-word" href="{% url 'vault:detail' entry.pk %}">{{ entry.word }}</a>
+              <time class="vault-meta text-nowrap" datetime="{{ entry.created_at|date:'c' }}">{{ entry.created_at|date:"M j, Y" }}</time>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="text-center py-3" id="vault-summary-empty">
+          <span class="empty-state-icon mb-3" aria-hidden="true"><i class="bi bi-book"></i></span>
+          <h3 class="h5 fw-bold">No words in your vault yet</h3>
+          <p class="text-body-secondary mx-auto mb-0 vault-empty-text">Save a word with its meaning and your own memory trick. Your counts and latest words will show here.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
   <h2 class="h4 fw-bold mb-3">Your tools</h2>
   <div class="row g-4">
     <div class="col-md-6">
