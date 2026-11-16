@@ -115,7 +115,8 @@ LexiTrace/
 │   └── tests.py              Vault tests
 ├── config/                   Django project settings and root URLs
 ├── docs/
-│   └── erd.md                Entity relationship diagram and business rules
+│   ├── erd.md                Entity relationship diagram and business rules
+│   └── LexiTrace-Belino-MarcelSimon-G2-PD2.pdf   PD2 completion report
 ├── static/
 │   ├── css/theme.css         Library theme, light and dark palettes
 │   ├── js/theme.js           Theme toggle
@@ -221,7 +222,7 @@ python manage.py test --keepdb
 
 ## Test accounts
 
-Test accounts are listed in the PD2 completion report. No passwords are stored in this repository.
+Two test accounts, TestAdmin (admin) and CoolSmith (learner), are listed in the [PD2 completion report](docs/LexiTrace-Belino-MarcelSimon-G2-PD2.pdf). The report holds throwaway test passwords for those two accounts only; no real credentials are stored in this repository.
 
 ## Known limitations
 
