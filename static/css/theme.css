@@ -128,9 +128,25 @@ a {
   box-shadow: none;
 }
 
+.lt-navbar-shell {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
 .lt-navbar {
+  --bs-navbar-padding-y: 0.6rem;
+  --bs-navbar-padding-x: 0.25rem;
   background-color: var(--lt-surface);
-  border-bottom: 1px solid var(--lt-border);
+  border: 1px solid var(--lt-border);
+  border-radius: var(--lt-radius);
+  box-shadow: var(--lt-shadow);
+}
+
+@media (max-width: 767.98px) {
+  .lt-navbar .navbar-collapse {
+    margin-top: 0.6rem;
+    border-top: 1px solid var(--lt-border);
+  }
 }
 
 .lt-navbar .nav-link {
@@ -395,6 +411,41 @@ a {
   background-color: var(--lt-primary-soft);
   color: var(--lt-primary-text);
   font-size: 1.35rem;
+}
+
+.tool-card-link {
+  color: var(--lt-text);
+  text-decoration: none;
+}
+
+.tool-card-link:focus-visible {
+  outline: none;
+}
+
+.tool-card-arrow {
+  color: var(--lt-muted);
+  font-size: 1.25rem;
+}
+
+.tool-card:hover,
+.tool-card:focus-within {
+  border-color: var(--lt-primary);
+}
+
+.tool-card:hover .tool-card-link,
+.tool-card:focus-within .tool-card-link {
+  color: var(--lt-primary-text);
+  text-decoration: underline;
+}
+
+.tool-card:hover .tool-card-arrow,
+.tool-card:focus-within .tool-card-arrow {
+  color: var(--lt-primary-text);
+}
+
+.tool-card:focus-within {
+  outline: 3px solid var(--lt-primary);
+  outline-offset: 2px;
 }
 
 .badge-soon {
