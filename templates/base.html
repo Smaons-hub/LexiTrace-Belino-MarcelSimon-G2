@@ -33,7 +33,7 @@
             <span>Lexi<span class="brand-accent">Trace</span></span>
           </a>
 
-          <div class="lt-nav-tools d-flex align-items-center gap-2 order-lg-last">
+          <div class="d-flex align-items-center gap-2 order-lg-last">
             <button type="button" id="theme-toggle" class="theme-toggle" aria-label="Toggle light and dark mode" title="Toggle light and dark mode">
               <i class="bi bi-moon-stars" aria-hidden="true"></i>
             </button>
@@ -43,7 +43,7 @@
           </div>
 
           <div class="collapse navbar-collapse" id="main-nav">
-            <ul class="navbar-nav lt-nav-group lt-nav-links ms-lg-auto">
+            <ul class="navbar-nav lt-nav-group lt-nav-links">
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'accounts:dashboard' %}"{% if request.resolver_match.url_name == 'learner_dashboard' or request.resolver_match.url_name == 'admin_dashboard' %} aria-current="page"{% endif %}><i class="bi bi-grid me-1" aria-hidden="true"></i>Dashboard</a>
               </li>
@@ -87,7 +87,7 @@
             <span>Lexi<span class="brand-accent">Trace</span></span>
           </a>
 
-          <button type="button" id="theme-toggle" class="theme-toggle ms-auto" aria-label="Toggle light and dark mode" title="Toggle light and dark mode">
+          <button type="button" id="theme-toggle" class="theme-toggle ms-auto ms-lg-0" aria-label="Toggle light and dark mode" title="Toggle light and dark mode">
             <i class="bi bi-moon-stars" aria-hidden="true"></i>
           </button>
 
