@@ -142,11 +142,107 @@ a {
   box-shadow: var(--lt-shadow);
 }
 
-@media (max-width: 767.98px) {
+.lt-logout-form {
+  display: block;
+}
+
+@media (min-width: 992px) {
+  .lt-navbar .lt-nav-group {
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .lt-nav-user,
+  .lt-nav-tools {
+    margin-left: 0.9rem;
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--lt-border);
+  }
+
+  .lt-nav-user .navbar-text {
+    padding-inline: 0.4rem;
+  }
+
+  .lt-logout-form {
+    display: inline;
+  }
+}
+
+@media (max-width: 991.98px) {
   .lt-navbar .navbar-collapse {
     margin-top: 0.6rem;
     border-top: 1px solid var(--lt-border);
   }
+
+  .lt-navbar .lt-nav-group .nav-item + .nav-item,
+  .lt-navbar .lt-nav-user {
+    border-top: 1px solid var(--lt-border);
+  }
+
+  .lt-navbar .lt-nav-group .nav-link,
+  .lt-navbar .lt-nav-user .navbar-text {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 44px;
+    margin-block: 0.25rem;
+    padding-inline: 0.85rem;
+    text-align: start;
+  }
+}
+
+.lt-guest-navbar > .container-fluid {
+  column-gap: 0.75rem;
+  row-gap: 0.6rem;
+}
+
+.lt-guest-navbar .navbar-brand {
+  margin-right: 0;
+}
+
+.lt-guest-auth {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.lt-guest-auth .btn[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+
+@media (min-width: 768px) {
+  .lt-guest-navbar > .container-fluid {
+    flex-wrap: nowrap;
+  }
+
+  .lt-guest-auth {
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--lt-border);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .lt-guest-auth {
+    flex: 1 1 100%;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--lt-border);
+  }
+
+  .lt-guest-auth .btn {
+    display: inline-flex;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+  }
+}
+
+.lt-auth-shell {
+  max-width: 30rem;
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 5vw, 3rem);
 }
 
 .lt-navbar .nav-link {
