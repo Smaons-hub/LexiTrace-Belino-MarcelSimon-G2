@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from .decorators import role_required
 from .forms import LoginForm, ProfileForm, RegisterForm, SearchForm
 from .models import SearchHistory, User
-from .services import get_daily_review
+from .services import get_daily_review, get_vault_overview, get_vault_summary
 
 RECENT_SEARCHES_SHOWN = 5
 SEARCH_HISTORY_LIMIT = 20
@@ -80,6 +80,7 @@ def learner_dashboard(request):
     return render(request, 'accounts/learner_dashboard.html', {
         **search_panel_context(request),
         'daily_review': get_daily_review(request.user),
+        'vault_summary': get_vault_summary(request.user),
     })
 
 
@@ -100,6 +101,7 @@ def admin_dashboard(request):
     return render(request, 'accounts/admin_dashboard.html', {
         'stats': stats,
         'recent_users': recent_users,
+        'vault_overview': get_vault_overview(),
         **search_panel_context(request),
     })
 
